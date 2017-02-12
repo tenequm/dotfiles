@@ -124,7 +124,7 @@ defaults write com.apple.universalaccess HIDScrollZoomModifierMask -int 262144
 defaults write com.apple.universalaccess closeViewZoomFollowsFocus -bool true
 
 # Disable press-and-hold for keys in favor of key repeat
-defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+#defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
 # Set a blazingly fast keyboard repeat rate, and make it happen more quickly.
 defaults write NSGlobalDomain InitialKeyRepeat -int 20
@@ -169,7 +169,7 @@ defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Desk
 
 # Show icons for hard drives, servers, and removable media on the desktop
 defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
-defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+#defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
 defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
 defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 
@@ -281,9 +281,9 @@ defaults write com.apple.dock showhidden -bool true
 defaults write com.apple.universalaccess reduceTransparency -bool true
 
 # Add iOS Simulator to Applications folder.
-if [[ "$RUN_AS_ROOT" = true ]]; then
-  sudo ln -sf /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app /Applications/Simulator.app
-fi
+#if [[ "$RUN_AS_ROOT" = true ]]; then
+  #sudo ln -sf /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app /Applications/Simulator.app
+#fi
 
 # Hot corners
 # Possible values:
@@ -298,21 +298,21 @@ fi
 # 11: Launchpad
 # 12: Notification Center
 # Bottom right screen corner → Mission Control
-defaults write com.apple.dock wvous-br-corner -int 2
-defaults write com.apple.dock wvous-br-modifier -int 0
+#defaults write com.apple.dock wvous-br-corner -int 2
+#defaults write com.apple.dock wvous-br-modifier -int 0
 # Top right screen corner → Put display to sleep
-defaults write com.apple.dock wvous-tr-corner -int 10
-defaults write com.apple.dock wvous-tr-modifier -int 0
+#defaults write com.apple.dock wvous-tr-corner -int 10
+#defaults write com.apple.dock wvous-tr-modifier -int 0
 # Bottom left screen corner → Desktop
-defaults write com.apple.dock wvous-bl-corner -int 4
-defaults write com.apple.dock wvous-bl-modifier -int 0
+#defaults write com.apple.dock wvous-bl-corner -int 4
+#defaults write com.apple.dock wvous-bl-modifier -int 0
 
 ###############################################################################
 # Safari & WebKit                                                             #
 ###############################################################################
 
 # Set Safari’s home page to `about:blank` for faster loading
-defaults write com.apple.Safari HomePage -string "about:blank"
+#defaults write com.apple.Safari HomePage -string "about:blank"
 
 # Prevent Safari from opening ‘safe’ files automatically after downloading
 defaults write com.apple.Safari AutoOpenSafeDownloads -bool false

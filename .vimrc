@@ -1,52 +1,193 @@
-syntax on               " enable syntax highlighting
-set cursorline          " highlight the current line
-" set background=dark   " darker color scheme
-" set ruler             " show line number in bar
-set nobackup            " don't create pointless backup files; Use VCS instead
-set autoread            " watch for file changes
-set number              " show line numbers
-set showcmd             " show selection metadata
-set showmode            " show INSERT, VISUAL, etc. mode
-set showmatch           " show matching brackets
-set autoindent smartindent  " auto/smart indent
-set smarttab            " better backspace and tab functionality
-set scrolloff=5         " show at least 5 lines above/below
-filetype on             " enable filetype detection
-filetype indent on      " enable filetype-specific indenting
-filetype plugin on      " enable filetype-specific plugins
-" colorscheme cobalt      " requires cobalt.vim to be in ~/.vim/colors
+set nocompatible        " Get the latest Vim settings/options
 
-" column-width visual indication
-let &colorcolumn=join(range(81,999),",")
-highlight ColorColumn ctermbg=235 guibg=#001D2F
+so ~/.vim/plugins.vim
 
-" tabs and indenting
-set autoindent          " auto indenting
-set smartindent         " smart indenting
-set expandtab           " spaces instead of tabs
-set tabstop=2           " 2 spaces for tabs
-set shiftwidth=2        " 2 spaces for indentation
+"---------Basic configs---------"
+set history=50		" keep 50 lines of command line history
+set ruler		" show the cursor position all the time
+set showcmd		" display incomplete commands
+set incsearch		" do incremental searching
+set backspace=indent,eol,start " normal backspace
+set nocompatible        " using Vim settings instead of Vi
+syntax enable           " enabling syntax highlighting
+set background=dark
+colorscheme solarized   " setting colorscheme
+set nu                  " set numeration of the rows
+set wildmenu            " set zsh-like autocomlete
+cnoremap <C-p> <Up>
+cnoremap <C-n> <Down>
+set pastetoggle=<F2>    " Set pasting-mode toggle to F2
+let mapleader = ','
+set guifont=Menlo\ Regular\ for\ Powerline:h14
+set hls
+set noerrorbells visualbell t_vb=               "No damn bells
+set autowriteall
+set complete=.,w,b,u
 
-" bells
-set noerrorbells        " turn off audio bell
-set visualbell          " but leave on a visual bell
+"---------Mappings------"
+nmap <silent> <leader>j :nohlsearch<CR><Esc> 
+nmap <Leader>ed :tabedit $MYVIMRC<CR>                 
+nmap <Leader>eq :e ~/.vim/UltiSnips/
+nmap <Leader>s <Leader><Leader>s
+nmap <Leader>gh :cd /Applications/MAMP/htdocs<cr>   
+nmap <leader>pf :!php-cs-fixer fix "%" --level=psr2
+nmap <leader>ev :vsp<cr>
+nmap <leader>es :sp<cr>
+" Turning off <Ctrl-p> combination in insert mode
+imap <c-p> <Nop>
+imap jj <Esc>
 
-" search
-set hlsearch            " highlighted search results
-set showmatch           " show matching bracket
+"---------Comfortable opening of new files--------"
+cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<cr>
 
-" other
-set guioptions=aAace    " don't show scrollbar in MacVim
-" call pathogen#infect()  " use pathogen
+"--------Plugins-----------"
 
-" clipboard
-set clipboard=unnamed   " allow yy, etc. to interact with OS X clipboard
+"/
+"/ CtrlP
+"/
+let g:ctrlp_custom_ignore = 'node_modules\DS_Stor\|git'
+"let g:ctrlp_custom_ignore = 'vendor'
+let g:ctrlp_match_window = 'top,order:ttb,min:1,max:30,results:30'
+"Make CtrlP tag toggle
+nmap <D-p> :CtrlP<cr>
+nmap <D-r> :CtrlPBufTag<cr>
+nmap <D-e> :CtrlPMRUFiles<cr>
+nmap <Leader>. :CtrlPTag<cr>
 
-" shortcuts
-map <F2> :NERDTreeToggle<CR>
+"/
+"/ NERDTree
+"/
+let NERDTreeHijackNetrw = 0
+"Make NERTDTree easier to toggle
+nmap <D-1> :NERDTreeToggle<cr>
 
-" remapped keys
-inoremap {      {}<Left>
-inoremap {<CR>  {<CR>}<Esc>O
-inoremap {{     {
-inoremap {}     {}
+"/
+"/ Greplace.vim
+"/
+set grepprg=ag      "We want to use Ag for the search
+let g:grep_cmd_opts = '--line-numbers --noheading'
+
+"/
+"/ PHP formatting plugin
+"/
+let g:phpfmt_autosave = 1
+nmap <Leader>pf :PhpFmt<cr>
+
+"/
+"/ PHP Documentor for VIM
+"/
+let g:pdv_template_dir = $HOME ."/.vim/bundle/pdv/templates_snip"
+nnoremap <Leader>d :call pdv#DocumentWithSnip()<CR>
+
+"/
+"/ UltiSnips
+"/
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+
+"/
+"/ Syntastic
+"/
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+"/
+"/ Easymotion
+"/
+hi link EasyMotionTarget ErrorMsg
+hi link EasyMotionShade  Comment
+
+"/
+"/ delimitMate
+"/
+let g:delimitMate_expand_cr = 1
+let g:delimitMate_expand_space = 1
+let g:delimitMate_jump_expansion = 1
+
+"/
+"/ Tabularize
+"/
+if exists(":Tabularize")
+    nmap <leader>a= :Tabularize /=<cr>
+    vmap <leader>a= :Tabularize /=<cr>
+    nmap <leader>a: :Tabularize /:\zs<cr>
+    vmap <leader>a: :Tabularize /:\zs<cr>
+endif
+
+"---------Auto-Commands-----"
+"Automatically source Vimrc file on save
+augroup autosourcing
+    autocmd!
+    autocmd BufWritePost .vimrc source %
+augroup END
+
+function! IPhpInsertUse()
+    call PhpInsertUse()
+    call feedkeys('a',  'n')
+endfunction
+autocmd FileType php inoremap <Leader>n <Esc>:call IPhpInsertUse()<CR>
+autocmd FileType php noremap <Leader>n :call PhpInsertUse()<CR>
+
+function! IPhpExpandClass()
+    call PhpExpandClass()
+    call feedkeys('a', 'n')
+endfunction
+autocmd FileType php inoremap <Leader>nf <Esc>:call IPhpExpandClass()<CR>
+autocmd FileType php noremap <Leader>nf :call PhpExpandClass()<CR>
+
+"Sort PHP use statements
+"http://stackoverflow.com/questions/11531073/how-do-you-sort-a-range-of-lines-by-length
+vmap <Leader>su ! awk '{ print length(), $0 \| "sort -n \| cut -d\\  -f2-" }'<cr>
+
+"---------Tab management-------"
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+
+"---------Adding plugins load-------"
+filetype plugin on
+runtime macros/matchit.vim
+
+"---------Managing backupfiles into ~/tmp--------"
+set swapfile
+set backup
+set backupdir=~/tmp
+set backupskip=~/tmp/*
+set directory=~/tmp
+set writebackup
+set undodir=~/tmp
+
+"---------Split Management------------"
+set splitbelow
+set splitright
+
+nmap <C-J> <C-W><C-J>
+nmap <C-K> <C-W><C-K>
+nmap <C-H> <C-W><C-H>
+nmap <C-L> <C-W><C-L>
+
+"---------Visuals-----------"
+set guioptions-=e       "We don't want GUI tabs
+set linespace=10
+
+"Get rid of ugly split borders
+hi vertsplit guifg=bg guibg=bg
+
+
+"---------PHP syntax override----------"
+function! PhpSyntaxOverride()
+  hi! def link phpDocTags  phpDefine
+  hi! def link phpDocParam phpType
+endfunction
+
+augroup phpSyntaxOverride
+  autocmd!
+  autocmd FileType php call PhpSyntaxOverride()
+augroup END

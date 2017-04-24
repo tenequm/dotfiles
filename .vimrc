@@ -9,6 +9,9 @@ Plug 'Shougo/neocomplete' | Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'vim-syntastic/syntastic' | Plug 'chase/vim-ansible-yaml'
 Plug 'Raimondi/delimitMate'
 Plug 'alexdavid/vim-min-git-status' | Plug 'idanarye/vim-merginal'
+Plug 'gabrielelana/vim-markdown'
+Plug 'Glench/Vim-Jinja2-Syntax'
+Plug 'JamshedVesuna/vim-markdown-preview'
 call plug#end()
 
 "---------Basic configs---------"
@@ -67,8 +70,8 @@ imap <c-p> <Nop>
 imap jj <Esc>
 nnoremap j gj
 nnoremap k gk
-nnoremap gj j
-nnoremap gk k
+" nnoremap gj j
+" nnoremap gk k
 nnoremap n nzz
 nnoremap } }zz
 nnoremap J mzJ`z
@@ -127,14 +130,30 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 1
 let g:syntastic_auto_jump = 1
+let g:syntastic_php_php_quiet_messages={"regex": "^unexpected\ \'\%\'$"}
+" let g:syntastic_ignore_files = ['\m\.php\.j2$']
+" autocmd BufRead,BufNewFile *.php.j2 set filetype=php.jinja
+
 "/ Easymotion
 hi link EasyMotionTarget ErrorMsg
 hi link EasyMotionShade  Comment
+
 "/ delimitMate
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_expand_space = 1
 let g:delimitMate_jump_expansion = 1
 inoremap <expr> <BS>  pumvisible() ? neocomplete#smart_close_popup()."\<BS>" : delimitMate#BS()
+
+"/ vim-markdown
+let g:markdown_enable_insert_mode_mappings = 0
+
+"/ vim-markdown-preview
+let vim_markdown_preview_github=1
+
+"/ vim-move
+vmap <C-k> <Plug>MoveBlockUp<cr>
+vmap <C-j> <Plug>MoveBlockDown<cr>
+
 "/ Snippets configs
 function! g:UltiSnips_Complete()
     call UltiSnips#ExpandSnippet()
@@ -176,10 +195,6 @@ nmap <leader>as :UltiSnipsEdit<cr>
 " "/ Greplace.vim
 " set grepprg=ag      "We want to use Ag for the search
 " let g:grep_cmd_opts = '--line-numbers --noheading'
-"/ Syntastic
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
 
 "---------Auto-Commands-----"
 "Automatically source Vimrc file on save

@@ -138,6 +138,9 @@ let g:syntastic_php_php_quiet_messages={"regex": "^unexpected\ \'\%\'$"}
 hi link EasyMotionTarget ErrorMsg
 hi link EasyMotionShade  Comment
 
+"/ Easymotion
+hi link EasyMotionTarget ErrorMsg
+hi link EasyMotionShade  Comment
 "/ delimitMate
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_expand_space = 1
@@ -195,6 +198,10 @@ nmap <leader>as :UltiSnipsEdit<cr>
 " "/ Greplace.vim
 " set grepprg=ag      "We want to use Ag for the search
 " let g:grep_cmd_opts = '--line-numbers --noheading'
+"/ Syntastic
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
 
 "---------Auto-Commands-----"
 "Automatically source Vimrc file on save

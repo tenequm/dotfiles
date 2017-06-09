@@ -17,7 +17,11 @@ function dman() {
   open "dash://manpages:$*"
 }
 
-# source aliases
+# Source tmuxinator completion
+autoload -Uz compinit && compinit
+source ~/.bin/tmuxinator.zsh
+
+# Source aliases
 ALIASFILE=~/.aliasesrc
 source $ALIASFILE
 function add_alias() {
@@ -34,7 +38,14 @@ function add_alias() {
 export ZSH=/Users/mykhaylokolesnik/.oh-my-zsh
 ZSH_THEME="agnoster"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-plugins=(git colored-man-pages colorize github vagrant virtualenv pip python brew osx zsh-syntax-highlighting docker yii2 composer pj vi-mode httpie)
+plugins=(git colored-man-pages colorize github vagrant virtualenv pip python brew osx zsh-syntax-highlighting docker yii2 composer pj vi-mode httpie nmap thefuck)
 source $ZSH/oh-my-zsh.sh
 PROJECT_PATHS=(~/Projects)
 export POWERLINE_CONFIG_COMMAND="/Users/mykhaylokolesnik/Library/Python/2.7/bin/powerline-config"
+eval $(thefuck --alias)
+
+# Bindkeys
+export KEYTIMEOUT=1
+bindkey '^U' kill-whole-line
+bindkey '^O' vi-cmd-mode
+bindkey '^B' fuck-command-line

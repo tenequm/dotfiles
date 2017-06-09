@@ -9,6 +9,7 @@ Plug 'Shougo/neocomplete' | Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'vim-syntastic/syntastic' | Plug 'chase/vim-ansible-yaml'
 Plug 'Raimondi/delimitMate'
 Plug 'alexdavid/vim-min-git-status' | Plug 'idanarye/vim-merginal'
+Plug 'airblade/vim-gitgutter'
 Plug 'gabrielelana/vim-markdown'
 Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'JamshedVesuna/vim-markdown-preview'
@@ -131,7 +132,7 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 1
 let g:syntastic_auto_jump = 1
 let g:syntastic_php_php_quiet_messages={"regex": "^unexpected\ \'\%\'$"}
-" let g:syntastic_ignore_files = ['\m\.php\.j2$']
+let g:syntastic_ignore_files = ['\m\.yml$']
 " autocmd BufRead,BufNewFile *.php.j2 set filetype=php.jinja
 
 "/ Easymotion

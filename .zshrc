@@ -1,13 +1,14 @@
 # Exports
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH="$HOME/Library/Python/2.7/bin:/usr/local/sbin:$PATH"
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# export PATH="$HOME/Library/Python/2.7/bin:/usr/local/sbin:$PATH"
 export EDITOR=vim
 export DEFAULT_USER=mykhaylokolesnik
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
 export SSH_KEY_PATH="~/.ssh/id_rsa"
 export ANSIBLE_VAULT_PASSWORD_FILE=~/.vault_pass.txt
+source ~/tmp/do_api
 
 # Open argument in Dash
 function dash() {
@@ -16,6 +17,16 @@ function dash() {
 function dman() {
   open "dash://manpages:$*"
 }
+
+# Oh-my-zsh configs
+export ZSH=/Users/mykhaylokolesnik/.oh-my-zsh
+ZSH_THEME="agnoster"
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+plugins=(git colored-man-pages colorize github vagrant virtualenv pip python brew osx zsh-syntax-highlighting docker yii2 composer pj vi-mode httpie nmap thefuck fzf-zsh zsh-completions)
+source $ZSH/oh-my-zsh.sh
+PROJECT_PATHS=(~/Projects)
+export POWERLINE_CONFIG_COMMAND="/Users/mykhaylokolesnik/Library/Python/2.7/bin/powerline-config"
+eval $(thefuck --alias)
 
 # Source tmuxinator completion
 autoload -Uz compinit && compinit
@@ -34,18 +45,10 @@ function add_alias() {
     fi
 }
 
-# Oh-my-zsh configs
-export ZSH=/Users/mykhaylokolesnik/.oh-my-zsh
-ZSH_THEME="agnoster"
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-plugins=(git colored-man-pages colorize github vagrant virtualenv pip python brew osx zsh-syntax-highlighting docker yii2 composer pj vi-mode httpie nmap thefuck)
-source $ZSH/oh-my-zsh.sh
-PROJECT_PATHS=(~/Projects)
-export POWERLINE_CONFIG_COMMAND="/Users/mykhaylokolesnik/Library/Python/2.7/bin/powerline-config"
-eval $(thefuck --alias)
-
 # Bindkeys
 export KEYTIMEOUT=1
 bindkey '^U' kill-whole-line
 bindkey '^O' vi-cmd-mode
 bindkey '^B' fuck-command-line
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

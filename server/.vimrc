@@ -4,7 +4,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'altercation/vim-colors-solarized'
 Plug 'tpope/vim-vinegar' | Plug 'tpope/vim-commentary'| Plug 'tpope/vim-repeat' 
 Plug 'tpope/vim-surround' | Plug 'tpope/vim-unimpaired'
-Plug 'yuttie/comfortable-motion.vim' | Plug 'easymotion/vim-easymotion'
+Plug 'easymotion/vim-easymotion'
 Plug 'chase/vim-ansible-yaml'
 Plug 'Raimondi/delimitMate'
 Plug 'gabrielelana/vim-markdown'

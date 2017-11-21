@@ -1,0 +1,36 @@
+{
+	"segments": {
+		"right": [
+			{
+				"function": "powerline.segments.common.players.spotify_apple_script",
+                                "name": "player",
+                                "args": {
+                                        "state_symbol": "u'fallback': u'', u'pause': u'~', u'stop': u'X', u'play': u'>'}",
+                                        "format": "u'{state_symbol} {artist} - {title} ({total})'"
+                                }
+			},
+			{
+				"function": "powerline.segments.common.net.external_ip"
+			},
+			{
+				"function": "powerline.segments.common.time.date"
+			},
+			{
+				"function": "powerline.segments.common.time.date",
+				"name": "time",
+				"args": {
+					"format": "%H:%M",
+					"istime": true
+				}
+			},
+                        {
+                                "function": "powerline.segments.common.wthr.weather"
+                        },
+			{
+				"function": "powerline.segments.common.net.hostname"
+			}
+		],
+                "left": [
+                ]
+	}
+}

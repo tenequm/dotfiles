@@ -71,6 +71,7 @@ nmap <C-K> <C-W><C-K>
 nmap <C-H> <C-W><C-H>
 nmap <C-L> <C-W><C-L>
 inoremap <C-U> <C-G>u<C-U>
+nmap <leader>nn :set invnumber<cr>
 
 "--------Plugins-----------"
 "/ Easymotion

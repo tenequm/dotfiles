@@ -88,7 +88,9 @@ inoremap <expr> <BS>  pumvisible() ? neocomplete#smart_close_popup()."\<BS>" : d
 "/ vim-markdown
 let g:markdown_enable_insert_mode_mappings = 0
 
-autocmd BufRead,BufNewFile *.conf set filetype=config
+augroup filetypedetect
+    autocmd BufRead,BufNewFile *.conf setfiletype config
+augroup END
 autocmd BufRead,BufNewFile *.conf set shiftwidth=2
 autocmd BufRead,BufNewFile *.conf set softtabstop=2
 

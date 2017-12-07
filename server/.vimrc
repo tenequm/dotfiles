@@ -9,6 +9,7 @@ Plug 'chase/vim-ansible-yaml'
 Plug 'Raimondi/delimitMate'
 Plug 'gabrielelana/vim-markdown'
 Plug 'Glench/Vim-Jinja2-Syntax'
+Plug 'chr4/nginx.vim'
 call plug#end()
 
 "---------Basic configs---------"

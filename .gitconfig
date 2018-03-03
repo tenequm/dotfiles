@@ -1,8 +1,8 @@
 [user]
   name = Mykhaylo Kolesnik
-  email = mike555.95@gmail.com
+  email = tenequm@gmail.com
 [core]
-  editor = vi
+  editor = vim
   excludesfile = ~/.gitignore
   autocrlf = input
 [color]
@@ -11,7 +11,7 @@
   interactive = auto
   status = auto
 [web]
-  browser = google-chrome
+  browser = safari
 [credential]
   helper = osxkeychain
 [push]

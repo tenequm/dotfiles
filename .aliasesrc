@@ -1,3 +1,30 @@
+function add_alias() {
+    if [[ -z $1 || -z $2 || $# -gt 2 ]]; then
+        echo usage:
+        echo "\t\$$0 ll 'ls -l'"
+    else
+        echo "alias $1='$2'" >> $ALIASFILE
+        echo "alias ADDED to $ALIASFILE"
+    fi
+}
+function dex() {
+  if [[ -z $1 || $# -gt 1  ]]; then
+    echo usage:
+    echo "$0 container_name"
+  else
+  docker exec -it $1 bash
+  fi
+
+}
+function dcx() {
+  if [[ -z $1 || $# -gt 1  ]]; then
+    echo usage:
+    echo "$0 docker-compose service name"
+  else
+  docker-compose exec $1 bash
+  fi
+
+}
 alias vggs='vagrant global-status'
 alias vgd='vagrant destroy -f'
 alias vgu='vagrant up'
@@ -21,12 +48,52 @@ alias dtr='docker run --detach --privileged --workdir=/etc/ansible/roles/role_un
 alias dt='docker exec -i -t test1 /bin/bash'
 alias dtd='docker rm -f test1'
 alias zshconfig="vim ~/.zshrc"
-alias -g gp='| grep -i'
-alias -g J='python -m json.tool'
-alias -g H='| head'
-alias -g T='| tail'
-alias -g G='| grep'
-alias -g L="| less"
+alias dud='du -d 1 -h'
+alias duf='du -sh *'
+alias muxr='mux start reg'
+alias vgr='vgd && vgu'
+alias mol='molecule'
+function dex() {
+  if [[ -z $1 || $# -gt 1  ]]; then
+    echo usage:
+    echo "$0 container_name"
+  else
+  docker exec -it $1 bash
+  fi
+
+}
+function dcx() {
+  if [[ -z $1 || $# -gt 1  ]]; then
+    echo usage:
+    echo "$0 docker-compose service name"
+  else
+  docker-compose exec $1 bash
+  fi
+
+}
+alias vggs='vagrant global-status'
+alias vgd='vagrant destroy -f'
+alias vgu='vagrant up'
+alias vgdf='vagrant -f destroy'
+alias vgbl='vagrant box list'
+alias vgb='vagrant box'
+alias vimrc='vim ~/.vimrc'
+alias vgsc='vagrant ssh-config'
+alias check='nc -zv'
+alias vgs='vagrant ssh'
+alias vgp='vagrant provision'
+alias mkpasswd='python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"'
+alias aliases='vim ~/.aliasesrc'
+alias gs='git status'
+alias gcm='git commit -m '
+alias gpu='git push'
+alias ga='git add'
+alias ap='ansible-playbook'
+alias al='ansible-lint'
+alias dtr='docker run --detach --privileged --workdir=/etc/ansible/roles/role_under_test/tests --name=test1 --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume=`pwd`:/etc/ansible/roles/role_under_test:ro geerlingguy/docker-ubuntu1604-ansible:latest /lib/systemd/systemd'
+alias dt='docker exec -i -t test1 /bin/bash'
+alias dtd='docker rm -f test1'
+alias zshconfig="vim ~/.zshrc"
 alias dud='du -d 1 -h'
 alias duf='du -sh *'
 alias muxr='mux start reg'
@@ -36,13 +103,8 @@ alias spip='sudo -H pip'
 alias mlc='molecule converge'
 alias mld='molecule destroy'
 alias mlr='mlc && mld'
-alias kl='kitchen list'
-alias kt='kitchen test'
-alias kc='kitchen converge'
-alias kv='kitchen verify'
 alias soa='source ~/.aliasesrc'
 alias vag='vagrant'
-alias kd='kitchen destroy'
 alias kgp='kubectl get pods'
 alias kgd='kubectl get deployments'
 alias kgs='kubectl get services'
@@ -54,3 +116,4 @@ alias esin='curl localhost:9200/_cat/indices'
 alias estemp='curl localhost:9200/_cat/templates'
 alias dps='docker ps'
 alias soz='source ~/.zshrc'
+alias wd='workon django'

@@ -9,8 +9,7 @@ Plug 'Shougo/neocomplete' | Plug 'honza/vim-snippets' | Plug 'SirVer/ultisnips'
 Plug 'vim-syntastic/syntastic' | Plug 'chase/vim-ansible-yaml'
 Plug 'Raimondi/delimitMate'
 Plug 'alexdavid/vim-min-git-status' | Plug 'idanarye/vim-merginal'
-Plug 'jreybert/vimagit'
-Plug 'airblade/vim-gitgutter'
+Plug 'jreybert/vimagit' | Plug 'airblade/vim-gitgutter'
 Plug 'gabrielelana/vim-markdown'
 Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'JamshedVesuna/vim-markdown-preview'
@@ -91,7 +90,7 @@ inoremap <C-U> <C-G>u<C-U>
 "/ Git snips
 set diffopt=filler,vertical
 nmap <leader>gs :Gministatus<cr>
-nmap <leader>gp :Git push<cr>
+nmap <leader>gp :Gpush<cr>
 map <C-n> :cnext<cr>
 map <C-p> :cprevious<cr>
 nnoremap <leader>c :cclose<cr>

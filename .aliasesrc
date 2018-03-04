@@ -1,3 +1,4 @@
+#!/bin/bash
 function add_alias() {
     if [[ -z $1 || -z $2 || $# -gt 2 ]]; then
         echo usage:
@@ -5,6 +6,7 @@ function add_alias() {
     else
         echo "alias $1='$2'" >> $ALIASFILE
         echo "alias ADDED to $ALIASFILE"
+        source $ALIASFILE
     fi
 }
 function dex() {
@@ -116,4 +118,6 @@ alias esin='curl localhost:9200/_cat/indices'
 alias estemp='curl localhost:9200/_cat/templates'
 alias dps='docker ps'
 alias soz='source ~/.zshrc'
-alias wd='workon django'
+alias wd='source /usr/local/bin/virtualenvwrapper.sh && workon django'
+alias pm='python manage.py'
+alias pmr='python manage.py runserver'

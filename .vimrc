@@ -187,6 +187,7 @@ map <leader>gti :let g:VimuxRunnerIndex =
 map <leader>gc :VimuxCloseRunner<cr>
 let g:VimuxUseNearest = 0
 autocmd FileType go set tabstop=4
+autocmd FileType python set shiftwidth=2
 
 
 "---------Auto-Commands-----"

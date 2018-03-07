@@ -2,8 +2,8 @@ set nocompatible        " Get the latest Vim settings/options
 
 call plug#begin('~/.vim/plugged')
 Plug 'altercation/vim-colors-solarized'
-Plug 'tpope/vim-vinegar' | Plug 'tpope/vim-commentary'| Plug 'tpope/vim-repeat' 
 Plug 'tpope/vim-surround' | Plug 'tpope/vim-fugitive' | Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-vinegar' | Plug 'tpope/vim-commentary'| Plug 'tpope/vim-repeat' 
 Plug 'easymotion/vim-easymotion' | Plug 'matze/vim-move'
 Plug 'Shougo/neocomplete' | Plug 'honza/vim-snippets' | Plug 'SirVer/ultisnips'
 Plug 'vim-syntastic/syntastic' | Plug 'chase/vim-ansible-yaml'
@@ -20,9 +20,9 @@ Plug 'benmills/vimux'
 call plug#end()
 
 "---------Basic configs---------"
+syntax enable           " enabling syntax highlighting
 colorscheme solarized   " setting colorscheme
 let mapleader = ','
-syntax enable           " enabling syntax highlighting
 set history=50		" keep 50 lines of command line history
 set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
@@ -195,3 +195,9 @@ augroup autosourcing
     autocmd!
     autocmd BufWritePost .vimrc source %
 augroup END
+
+hi! link Conceal Normal
+if has("termguicolors")
+    hi! Normal ctermbg=NONE guibg=NONE
+    hi! NonText ctermbg=NONE guibg=NONE
+endif

@@ -6,7 +6,7 @@ Plug 'tpope/vim-surround' | Plug 'tpope/vim-fugitive' | Plug 'tpope/vim-unimpair
 Plug 'tpope/vim-vinegar' | Plug 'tpope/vim-commentary'| Plug 'tpope/vim-repeat' 
 Plug 'easymotion/vim-easymotion' | Plug 'matze/vim-move'
 Plug 'Shougo/neocomplete' | Plug 'honza/vim-snippets' | Plug 'SirVer/ultisnips'
-Plug 'vim-syntastic/syntastic' | Plug 'chase/vim-ansible-yaml'
+Plug 'vim-syntastic/syntastic'
 Plug 'Raimondi/delimitMate'
 Plug 'alexdavid/vim-min-git-status' | Plug 'idanarye/vim-merginal'
 Plug 'jreybert/vimagit' | Plug 'airblade/vim-gitgutter'
@@ -17,6 +17,9 @@ Plug 'fatih/vim-go'
 Plug 'tpope/vim-dispatch'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'benmills/vimux'
+Plug 'hashivim/vim-terraform'
+" Plug 'ekalinin/Dockerfile.vim'
+Plug 'chase/vim-ansible-yaml'
 call plug#end()
 
 "---------Basic configs---------"
@@ -148,7 +151,7 @@ let g:markdown_enable_insert_mode_mappings = 0
 let vim_markdown_preview_github=1
 
 "/ vim-move
-let g:move_key_modifier = 'C'
+let g:move_key_modifier = 'A'
 
 "/ Snippets configs
 function! g:UltiSnips_Complete()
@@ -187,6 +190,8 @@ map <leader>gc :VimuxCloseRunner<cr>
 let g:VimuxUseNearest = 0
 autocmd FileType go set tabstop=4
 autocmd FileType python set shiftwidth=2
+autocmd FileType terraform setlocal commentstring=#%s
+autocmd BufNewFile,BufRead provision*.yml set ft=ansible
 
 
 "---------Auto-Commands-----"

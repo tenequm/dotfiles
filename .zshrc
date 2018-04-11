@@ -6,12 +6,15 @@ export DEFAULT_USER=mykhaylokolesnik
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export SSH_KEY_PATH="~/.ssh/id_rsa"
-export WORKON_HOME=~/Envs # Virtualenv dependency
+
+export WORKON_HOME=~/.virtualenvs # Virtualenv dependency
+source /usr/local/bin/virtualenvwrapper.sh
 
 # Oh-my-zsh configs
 export ZSH=/Users/mykhaylokolesnik/.oh-my-zsh
 ZSH_THEME="agnoster"
-plugins=(git colored-man-pages colorize github virtualenv pip python brew osx zsh-syntax-highlighting docker pj nmap fzf-zsh zsh-completions)
+plugins=(git colored-man-pages colorize github virtualenv pip python brew osx \
+         zsh-syntax-highlighting docker pj nmap fzf-zsh zsh-completions pipenv)
 source $ZSH/oh-my-zsh.sh
 PROJECT_PATHS=(~/Local ~/Projects)
 export POWERLINE_CONFIG_COMMAND="/Users/mykhaylokolesnik/Library/Python/2.7/bin/powerline-config"

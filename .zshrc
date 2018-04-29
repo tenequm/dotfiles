@@ -2,22 +2,25 @@
 
 export PATH="$HOME/bin:/usr/local/sbin:$PATH:$HOME/go/bin"
 export EDITOR=vim
-export DEFAULT_USER=mykhaylokolesnik
+export DEFAULT_USER=tenequm
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export SSH_KEY_PATH="~/.ssh/id_rsa"
 
 export WORKON_HOME=~/.virtualenvs # Virtualenv dependency
-source /usr/local/bin/virtualenvwrapper.sh
+# source /usr/local/bin/virtualenvwrapper.sh
+[[ -s ~/.profile ]] && source ~/.profile
+
+fpath=(/usr/local/share/zsh-completions $fpath)
 
 # Oh-my-zsh configs
-export ZSH=/Users/mykhaylokolesnik/.oh-my-zsh
+export ZSH=~/.oh-my-zsh
 ZSH_THEME="agnoster"
 plugins=(git colored-man-pages colorize github virtualenv pip python brew osx \
          zsh-syntax-highlighting docker pj nmap fzf-zsh zsh-completions pipenv)
 source $ZSH/oh-my-zsh.sh
 PROJECT_PATHS=(~/Local ~/Projects)
-export POWERLINE_CONFIG_COMMAND="/Users/mykhaylokolesnik/Library/Python/2.7/bin/powerline-config"
+export POWERLINE_CONFIG_COMMAND="/usr/local/bin/powerline-config"
 
 # Source aliases
 export ALIASFILE=~/.aliasesrc

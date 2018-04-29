@@ -9,24 +9,6 @@ function add_alias() {
         source $ALIASFILE
     fi
 }
-function dex() {
-  if [[ -z $1 || $# -gt 1  ]]; then
-    echo usage:
-    echo "$0 container_name"
-  else
-  docker exec -it $1 bash
-  fi
-
-}
-function dcx() {
-  if [[ -z $1 || $# -gt 1  ]]; then
-    echo usage:
-    echo "$0 docker-compose service name"
-  else
-  docker-compose exec $1 bash
-  fi
-
-}
 alias vggs='vagrant global-status'
 alias vgd='vagrant destroy -f'
 alias vgu='vagrant up'
@@ -128,3 +110,5 @@ alias vg='vagrant'
 alias vgsus='vagrant suspend'
 alias sshconf='vim ~/.ssh/config'
 alias gitclean='git gc --prune=now && git remote prune origin'
+alias clean-dns="sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper;sudo dscacheutil -flushcache"
+alias tg='terragrunt'

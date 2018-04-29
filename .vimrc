@@ -18,8 +18,9 @@ Plug 'tpope/vim-dispatch'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'benmills/vimux'
 Plug 'hashivim/vim-terraform'
-" Plug 'ekalinin/Dockerfile.vim'
 Plug 'chase/vim-ansible-yaml'
+Plug 'chr4/nginx.vim'
+Plug 'saltstack/salt-vim'
 call plug#end()
 
 "---------Basic configs---------"
@@ -192,6 +193,7 @@ autocmd FileType go set tabstop=4
 autocmd FileType python set shiftwidth=2
 autocmd FileType terraform setlocal commentstring=#%s
 autocmd BufNewFile,BufRead provision*.yml set ft=ansible
+au BufRead,BufNewFile */nginx/config/* set ft=nginx
 
 
 "---------Auto-Commands-----"

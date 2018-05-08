@@ -112,3 +112,7 @@ alias sshconf='vim ~/.ssh/config'
 alias gitclean='git gc --prune=now && git remote prune origin'
 alias clean-dns="sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper;sudo dscacheutil -flushcache"
 alias tg='terragrunt'
+alias mks='minikube start --memory 8192 --cpus 3 --docker-opt default-shm-size=8gb --insecure-registry dockerhub.tom.takeoff.com'
+alias kg='kubectl get'
+alias kuba='kubectl apply -f'
+alias kubd='kubectl delete -f'

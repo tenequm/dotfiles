@@ -17,7 +17,7 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 export ZSH=~/.oh-my-zsh
 ZSH_THEME="agnoster"
 plugins=(git colored-man-pages colorize github virtualenv pip python brew osx \
-         zsh-syntax-highlighting docker pj nmap fzf-zsh zsh-completions pipenv)
+         zsh-syntax-highlighting docker pj nmap fzf-zsh zsh-completions pipenv kubectl)
 source $ZSH/oh-my-zsh.sh
 PROJECT_PATHS=(~/Local ~/Projects)
 export POWERLINE_CONFIG_COMMAND="/usr/local/bin/powerline-config"
@@ -35,3 +35,6 @@ bindkey '^B' fuck-command-line
 ssh-add 2>/dev/null
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
+source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc'

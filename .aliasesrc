@@ -116,3 +116,5 @@ alias mks='minikube start --memory 8192 --cpus 3 --docker-opt default-shm-size=8
 alias kg='kubectl get'
 alias kuba='kubectl apply -f'
 alias kubd='kubectl delete -f'
+alias kd='kubectl describe'
+alias kgi='kubectl get ingress'

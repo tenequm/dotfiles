@@ -21,6 +21,7 @@ Plug 'hashivim/vim-terraform'
 Plug 'chase/vim-ansible-yaml'
 Plug 'chr4/nginx.vim'
 Plug 'saltstack/salt-vim'
+Plug 'nickhutchinson/vim-cmake-syntax'
 call plug#end()
 
 "---------Basic configs---------"
@@ -45,6 +46,7 @@ set autowrite
 set complete=.,w,b,u
 set ignorecase
 set smartcase
+set smartindent
 set gdefault
 set clipboard=unnamed
 set guioptions-=e       "We don't want GUI tabs
@@ -99,6 +101,12 @@ map <C-n> :cnext<cr>
 map <C-p> :cprevious<cr>
 nnoremap <leader>c :cclose<cr>
 
+"/ netrw configs
+nnoremap <c-p> :pclose<cr>
+let g:netrw_sizestyle="h"
+let g:netrw_preview=1
+let g:netrw_alto=0
+
 "--------Plugins-----------"
 "/ Neocomplete configs
 let g:acp_enableAtStartup = 0
@@ -133,7 +141,7 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 1
 let g:syntastic_auto_jump = 1
 let g:syntastic_php_php_quiet_messages={"regex": "^unexpected\ \'\%\'$"}
-let g:syntastic_ignore_files = ['\m\.yml$', '\m.\.sh$']
+let g:syntastic_ignore_files = ['\m\.yml$', '\m.\.sh$', '\mfabfile\.py$']
 
 "/ Easymotion
 hi link EasyMotionTarget ErrorMsg
@@ -194,6 +202,7 @@ autocmd FileType python set shiftwidth=2
 autocmd FileType terraform setlocal commentstring=#%s
 autocmd BufNewFile,BufRead provision*.yml set ft=ansible
 au BufRead,BufNewFile */nginx/config/* set ft=nginx
+au BufNewFile,BufRead Jenkinsfile setf groovy
 
 
 "---------Auto-Commands-----"

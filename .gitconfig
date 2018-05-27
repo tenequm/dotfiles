@@ -16,8 +16,6 @@
   helper = osxkeychain
 [push]
   default = simple
-[merge]
-  tool = kdiff3
 [difftool]
   prompt = false
 [alias]
@@ -28,3 +26,15 @@
   d = diff
   dc = diff --cached
   l = log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit
+[difftool "Kaleidoscope"]
+  cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[diff]
+  tool = Kaleidoscope
+[mergetool "Kaleidoscope"]
+  cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" \"$REMOTE\"
+[mergetool]
+  prompt = false
+	keepBackup = true
+[merge]
+  tool = Kaleidoscope
+

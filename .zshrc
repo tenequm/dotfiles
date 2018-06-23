@@ -6,6 +6,9 @@ export DEFAULT_USER=tenequm
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export SSH_KEY_PATH="~/.ssh/id_rsa"
+export JIRA_URL="https://cartfresh.atlassian.net"
+export JIRA_PREFIX="ITS"
+export JIRA_NAME="tenequm"
 
 export WORKON_HOME=~/.virtualenvs # Virtualenv dependency
 # source /usr/local/bin/virtualenvwrapper.sh
@@ -17,9 +20,9 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 export ZSH=~/.oh-my-zsh
 ZSH_THEME="agnoster"
 plugins=(git colored-man-pages colorize github virtualenv pip python brew osx \
-         zsh-syntax-highlighting docker pj nmap fzf-zsh zsh-completions pipenv kubectl)
+         zsh-syntax-highlighting docker pj nmap fzf-zsh zsh-completions pipenv kubectl jira)
 source $ZSH/oh-my-zsh.sh
-PROJECT_PATHS=(~/Local ~/Projects)
+PROJECT_PATHS=(~/Projects ~/Local)
 export POWERLINE_CONFIG_COMMAND="/usr/local/bin/powerline-config"
 
 # Source aliases

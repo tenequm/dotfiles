@@ -25,7 +25,22 @@ function dcx() {
   else
   docker-compose exec $1 bash
   fi
-
+}
+function git-tag() {
+  if [[ -z $1 || $# -gt 1  ]]; then
+    echo usage:
+    echo "$0 tag number"
+  else
+    git tag -a $1 -m "Version $1" && git push && git push --tags
+  fi
+}
+function git-tag-del() {
+  if [[ -z $1 || $# -gt 1  ]]; then
+    echo usage:
+    echo "$0 tag number"
+  else
+    git tag -d $1 && git push origin :refs/tags/$1
+  fi
 }
 alias vggs='vagrant global-status'
 alias vgd='vagrant destroy -f'
@@ -41,8 +56,7 @@ alias vgp='vagrant provision'
 alias mkpasswd='python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"'
 alias aliases='vim ~/.aliasesrc'
 alias gs='git status'
-alias gcm='git commit -m '
-alias gpu='git push'
+alias gcmm='git commit -m '
 alias ga='git add'
 alias gf='git flow'
 alias ap='ansible-playbook'
@@ -70,7 +84,6 @@ alias vgp='vagrant provision'
 alias mkpasswd='python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"'
 alias aliases='vim ~/.aliasesrc'
 alias gs='git status'
-alias gcm='git commit -m '
 alias gp='git push'
 alias gpu='git push -u origin $(git rev-parse --abbrev-ref HEAD)'
 alias ga='git add'
@@ -121,3 +134,8 @@ alias kubd='kubectl delete -f'
 alias kd='kubectl describe'
 alias kgi='kubectl get ingress'
 alias gbd='git branch -d'
+alias watch='watch -n 0.1'
+alias senv='source venv/bin/activate'
+alias denv='deactivate'
+alias dkr='docker run -it --rm'
+alias gcd='git checkout dev'

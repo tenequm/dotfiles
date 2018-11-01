@@ -1,9 +1,9 @@
 [user]
-  name = Mykhaylo Kolesnik
-  email = tenequm@gmail.com
+	name = Mykhaylo Kolesnik
+	email = tenequm@gmail.com
 [core]
   editor = vim
-  excludesfile = ~/.gitignore
+	excludesfile = /Users/tenequm/.gitignore_global
   autocrlf = input
 [color]
   branch = auto
@@ -38,3 +38,11 @@
 [merge]
   tool = Kaleidoscope
 
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Users/tenequm/Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[commit]
+	template = /Users/tenequm/.stCommitMsg

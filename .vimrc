@@ -22,6 +22,11 @@ Plug 'chase/vim-ansible-yaml'
 Plug 'chr4/nginx.vim'
 Plug 'saltstack/salt-vim'
 Plug 'nickhutchinson/vim-cmake-syntax'
+Plug 'sophacles/vim-bundle-mako'
+Plug 'tpope/vim-eunuch'
+Plug 'martinda/Jenkinsfile-vim-syntax'
+Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
+Plug 'nvie/vim-flake8'
 call plug#end()
 
 "---------Basic configs---------"
@@ -141,7 +146,7 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 1
 let g:syntastic_auto_jump = 1
 let g:syntastic_php_php_quiet_messages={"regex": "^unexpected\ \'\%\'$"}
-let g:syntastic_ignore_files = ['\m\.yml$', '\m.\.sh$', '\mfabfile\.py$']
+let g:syntastic_ignore_files = ['\m\.yml$', '\m.\.sh$', '\mfabfile\.py$', '\m\.py$', '\m\.html$']
 
 "/ Easymotion
 hi link EasyMotionTarget ErrorMsg
@@ -190,6 +195,7 @@ let g:go_fmt_command = "goimports"
 let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_operators = 1
+let g:go_template_autocreate = 0
 autocmd FileType go map <leader>gr :w<cr> :call VimuxRunCommand("clear; go run " . bufname("%"))<cr>
 autocmd FileType go nmap <leader>gb <Plug>(go-build)
 autocmd FileType go nmap <leader>gi <Plug>(go-install)
@@ -198,11 +204,12 @@ map <leader>gti :let g:VimuxRunnerIndex =
 map <leader>gc :VimuxCloseRunner<cr>
 let g:VimuxUseNearest = 0
 autocmd FileType go set tabstop=4
-autocmd FileType python set shiftwidth=2
+autocmd FileType python set shiftwidth=4 softtabstop=4
+autocmd FileType make set tabstop=4 shiftwidth=2 softtabstop=2
 autocmd FileType terraform setlocal commentstring=#%s
 autocmd BufNewFile,BufRead provision*.yml set ft=ansible
 au BufRead,BufNewFile */nginx/config/* set ft=nginx
-au BufNewFile,BufRead Jenkinsfile setf groovy
+" au BufNewFile,BufRead Jenkinsfile setf groovy
 
 
 "---------Auto-Commands-----"

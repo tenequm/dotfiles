@@ -11,6 +11,7 @@ export JIRA_URL="https://cartfresh.atlassian.net"
 export JIRA_PREFIX="ITS"
 export JIRA_NAME="tenequm"
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+export TERM=screen-256color
 
 export WORKON_HOME=~/.virtualenvs # Virtualenv dependency
 # source /usr/local/bin/virtualenvwrapper.sh
@@ -48,3 +49,7 @@ if which jenv > /dev/null; then eval "$(jenv init -)"; fi
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/local/bin/vault vault
+export PATH="/usr/local/opt/mysql-client/bin:$PATH"
+#source <(helm completion zsh)
+source <(helm completion zsh | sed 's/aliashash\["\(\w\+\)"\]/aliashash[\1]/g')
+export PATH="/usr/local/opt/redis@4.0/bin:$PATH"

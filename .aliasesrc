@@ -16,7 +16,6 @@ function dex() {
   else
   docker exec -it $1 bash
   fi
-
 }
 function dcx() {
   if [[ -z $1 || $# -gt 1  ]]; then
@@ -40,6 +39,22 @@ function git-tag-del() {
     echo "$0 tag number"
   else
     git tag -d $1 && git push origin :refs/tags/$1
+  fi
+}
+function hup() {
+  if [[ -z $1 || $# -gt 1  ]]; then
+    echo usage:
+    echo "$0 chart_name"
+  else
+  helm upgrade --install $1 .
+  fi
+}
+function hupr() {
+  if [[ -z $1 || $# -gt 1  ]]; then
+    echo usage:
+    echo "$0 chart_name"
+  else
+  helm upgrade --install $1 . --recreate-pods
   fi
 }
 alias vggs='vagrant global-status'
@@ -108,6 +123,7 @@ alias kgp='kubectl get pods'
 alias kgd='kubectl get deployments'
 alias kgs='kubectl get services'
 alias duh='du -d 1 -h'
+alias duhs='du -d 1 -h | sort -h'
 alias sduh='sudo du -d 1 -h'
 alias ra='cd ~/Dropbox/Projects/job_stuff/routine_automation'
 alias dco='docker-compose'
@@ -126,11 +142,14 @@ alias vgsus='vagrant suspend'
 alias sshconf='vim ~/.ssh/config'
 alias gitclean='git gc --prune=now && git remote prune origin'
 alias clean-dns="sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper;sudo dscacheutil -flushcache"
+alias cdns="sudo killall -HUP mDNSResponder"
 alias tg='terragrunt'
-alias mks='minikube start --memory 8192 --cpus 3 --docker-opt default-shm-size=8gb --insecure-registry dockerhub.tom.takeoff.com'
+alias mks='minikube start --memory 8192 --cpus 3'
 alias kg='kubectl get'
 alias kuba='kubectl apply -f'
 alias kubd='kubectl delete -f'
+alias kubc='kubectl create -f'
+
 alias kd='kubectl describe'
 alias kgi='kubectl get ingress'
 alias gbd='git branch -d'
@@ -139,3 +158,6 @@ alias senv='source venv/bin/activate'
 alias denv='deactivate'
 alias dkr='docker run -it --rm'
 alias gcd='git checkout dev'
+alias htx='helm template . -x'
+alias ht='helm template'
+alias htc='helm template .'

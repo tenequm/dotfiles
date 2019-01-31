@@ -1,32 +1,37 @@
 set nocompatible        " Get the latest Vim settings/options
 
 call plug#begin('~/.vim/plugged')
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  Plug 'lifepillar/vim-solarized8'
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+" Plug 'Shougo/neocomplete'
 Plug 'altercation/vim-colors-solarized'
 Plug 'tpope/vim-surround' | Plug 'tpope/vim-fugitive' | Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar' | Plug 'tpope/vim-commentary'| Plug 'tpope/vim-repeat' 
 Plug 'easymotion/vim-easymotion' | Plug 'matze/vim-move'
-Plug 'Shougo/neocomplete' | Plug 'honza/vim-snippets' | Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets' | Plug 'SirVer/ultisnips'
 Plug 'vim-syntastic/syntastic'
 Plug 'Raimondi/delimitMate'
 Plug 'alexdavid/vim-min-git-status' | Plug 'idanarye/vim-merginal'
 Plug 'jreybert/vimagit' | Plug 'airblade/vim-gitgutter'
-Plug 'gabrielelana/vim-markdown'
 Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'JamshedVesuna/vim-markdown-preview'
-Plug 'fatih/vim-go'
+Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-dispatch'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'benmills/vimux'
-Plug 'hashivim/vim-terraform'
-Plug 'chase/vim-ansible-yaml'
-Plug 'chr4/nginx.vim'
 Plug 'saltstack/salt-vim'
-Plug 'nickhutchinson/vim-cmake-syntax'
-Plug 'sophacles/vim-bundle-mako'
 Plug 'tpope/vim-eunuch'
-Plug 'martinda/Jenkinsfile-vim-syntax'
 Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 Plug 'nvie/vim-flake8'
+Plug 'towolf/vim-helm'
+" Plug 'luochen1990/rainbow'
+Plug 'google/vim-jsonnet'
 call plug#end()
 
 "---------Basic configs---------"
@@ -43,7 +48,9 @@ set background=dark
 set nu                  " set numeration of the rows
 set wildmenu            " set zsh-like autocomlete
 set pastetoggle=<F2>    " Set pasting-mode toggle to F2
-set guifont=Menlo\ Regular\ for\ Powerline:h14
+if !has("gui_vimr")
+  set guifont=Menlo\ Regular\ for\ Powerline:h14
+endif
 set hls
 set noerrorbells visualbell t_vb=               "No damn bells
 set autowriteall
@@ -113,31 +120,6 @@ let g:netrw_preview=1
 let g:netrw_alto=0
 
 "--------Plugins-----------"
-"/ Neocomplete configs
-let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#enable_auto_close_preview = 1
-" <CR>: close popup and save indent.
-imap <expr> <CR> pumvisible() ? "\<C-y>" : '<Plug>delimitMateCR'
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<cr>
-" function! s:my_cr_function()
-"   return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-" "   " For no inserting <CR> key.
-" "   "return pumvisible() ? "\<C-y>" : "\<CR>"
-" endfunction
-" Close popup by <Space>.
-" inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 "/ Syntastic
 let g:syntastic_always_populate_loc_list = 1
@@ -156,7 +138,6 @@ hi link EasyMotionShade  Comment
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_expand_space = 1
 let g:delimitMate_jump_expansion = 1
-inoremap <expr> <BS>  pumvisible() ? neocomplete#smart_close_popup()."\<BS>" : delimitMate#BS()
 
 "/ vim-markdown
 let g:markdown_enable_insert_mode_mappings = 0
@@ -209,8 +190,9 @@ autocmd FileType make set tabstop=4 shiftwidth=2 softtabstop=2
 autocmd FileType terraform setlocal commentstring=#%s
 autocmd BufNewFile,BufRead provision*.yml set ft=ansible
 au BufRead,BufNewFile */nginx/config/* set ft=nginx
-" au BufNewFile,BufRead Jenkinsfile setf groovy
-
+" autocmd BufRead,BufNewFile */templates/*.yaml,*/templates/*.tpl set ft=helm
+"
+autocmd FileType helm setlocal commentstring=#\ %s
 
 "---------Auto-Commands-----"
 "Automatically source Vimrc file on save
@@ -224,3 +206,35 @@ if has("termguicolors")
     hi! Normal ctermbg=NONE guibg=NONE
     hi! NonText ctermbg=NONE guibg=NONE
 endif
+
+"/ rainbow
+let g:rainbow_active = 1
+
+"/ deoplete
+let g:deoplete#enable_at_startup = 1
+
+"/ Neocomplete configs
+" let g:acp_enableAtStartup = 0
+" let g:neocomplete#enable_at_startup = 1
+" let g:neocomplete#enable_smart_case = 1
+" let g:neocomplete#sources#syntax#min_keyword_length = 3
+" let g:neocomplete#enable_auto_close_preview = 1
+" " <CR>: close popup and save indent.
+" imap <expr> <CR> pumvisible() ? "\<C-y>" : '<Plug>delimitMateCR'
+" " <C-h>, <BS>: close popup and delete backword char.
+" inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+" inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+" " inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<cr>
+" " function! s:my_cr_function()
+" "   return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+" " "   " For no inserting <CR> key.
+" " "   "return pumvisible() ? "\<C-y>" : "\<CR>"
+" " endfunction
+" " Close popup by <Space>.
+" " inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+" " Enable omni completion.
+" autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+" autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+" autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+" autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags

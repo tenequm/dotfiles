@@ -53,3 +53,10 @@ export PATH="/usr/local/opt/mysql-client/bin:$PATH"
 #source <(helm completion zsh)
 source <(helm completion zsh | sed 's/aliashash\["\(\w\+\)"\]/aliashash[\1]/g')
 export PATH="/usr/local/opt/redis@4.0/bin:$PATH"
+
+# Add gnu-getopt ti PATH
+export PATH="/usr/local/Cellar/gnu-getopt/1.1.6/bin":$PATH
+
+# Add python3 binaries to PATH
+export PATH="/Users/tenequm/Library/Python/3.7/bin":$PATH
+export PATH="/usr/local/opt/terraform@0.11/bin:$PATH"

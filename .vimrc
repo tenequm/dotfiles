@@ -104,6 +104,7 @@ nmap <C-K> <C-W><C-K>
 nmap <C-H> <C-W><C-H>
 nmap <C-L> <C-W><C-L>
 inoremap <C-U> <C-G>u<C-U>
+nmap <leader>kk :!kapitan compile<cr>
 
 "/ Git snips
 set diffopt=filler,vertical
@@ -190,6 +191,7 @@ autocmd FileType make set tabstop=4 shiftwidth=2 softtabstop=2
 autocmd FileType terraform setlocal commentstring=#%s
 autocmd BufNewFile,BufRead provision*.yml set ft=ansible
 au BufRead,BufNewFile */nginx/config/* set ft=nginx
+au BufRead,BufNewFile *.libjsonnet set ft=jsonnet
 " autocmd BufRead,BufNewFile */templates/*.yaml,*/templates/*.tpl set ft=helm
 "
 autocmd FileType helm setlocal commentstring=#\ %s

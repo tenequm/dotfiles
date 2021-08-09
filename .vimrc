@@ -240,3 +240,11 @@ let g:deoplete#enable_at_startup = 1
 " autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 " autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 " autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+
+" Checks if there is a file open after Vim starts up,
+" and if not, open the current working directory in Netrw.
+augroup InitNetrw
+  autocmd!
+  autocmd VimEnter * if expand("%") == "" | edit . | endif
+augroup END"

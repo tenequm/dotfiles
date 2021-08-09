@@ -109,7 +109,7 @@ nmap <leader>kk :!kapitan compile<cr>
 "/ Git snips
 set diffopt=filler,vertical
 nmap <leader>gs :Gministatus<cr>
-nmap <leader>gp :Gpush<cr>
+nmap <leader>gp :Git push<cr>
 map <C-n> :cnext<cr>
 map <C-p> :cprevious<cr>
 nnoremap <leader>c :cclose<cr>

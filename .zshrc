@@ -13,7 +13,7 @@ export JIRA_NAME="tenequm"
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 export TERM=screen-256color
 
-export WORKON_HOME=~/.virtualenvs # Virtualenv dependency
+export WORKON_HOME=~/.virtualenvs # Virtualenv dependency test
 # source /usr/local/bin/virtualenvwrapper.sh
 [[ -s ~/.profile ]] && source ~/.profile
 

@@ -23,7 +23,7 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 export ZSH=~/.oh-my-zsh
 ZSH_THEME="agnoster"
 plugins=(git colored-man-pages colorize github virtualenv pip python brew osx \
-         zsh-syntax-highlighting docker pj nmap fzf-zsh zsh-completions pipenv kubectl jira)
+         zsh-syntax-highlighting docker pj nmap pipenv kubectl jira)
 source $ZSH/oh-my-zsh.sh
 PROJECT_PATHS=(~/Projects ~/Local)
 export POWERLINE_CONFIG_COMMAND="/usr/local/bin/powerline-config"
@@ -42,8 +42,8 @@ ssh-add 2>/dev/null
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
-source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc'
+# source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
+# source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc'
 
 if which jenv > /dev/null; then eval "$(jenv init -)"; fi
 

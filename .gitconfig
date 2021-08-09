@@ -44,8 +44,6 @@
 [mergetool "sourcetree"]
 	cmd = /Users/tenequm/Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
-[commit]
-	template = /Users/tenequm/.stCommitMsg
 [filter "lfs"]
 	process = git-lfs filter-process
 	required = true

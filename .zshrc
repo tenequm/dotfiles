@@ -6,16 +6,12 @@ export EDITOR=vim
 export DEFAULT_USER=tenequm
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
-export SSH_KEY_PATH="~/.ssh/id_rsa"
-export JIRA_URL="https://cartfresh.atlassian.net"
-export JIRA_PREFIX="ITS"
-export JIRA_NAME="tenequm"
+export SSH_KEY_PATH="~/.ssh/id_ed25519"
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 export TERM=screen-256color
 
 export WORKON_HOME=~/.virtualenvs # Virtualenv dependency test
 # source /usr/local/bin/virtualenvwrapper.sh
-[[ -s ~/.profile ]] && source ~/.profile
 
 fpath=(/usr/local/share/zsh-completions $fpath)
 
@@ -23,7 +19,7 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 export ZSH=~/.oh-my-zsh
 ZSH_THEME="agnoster"
 plugins=(git colored-man-pages colorize github virtualenv pip python brew osx \
-         zsh-syntax-highlighting docker pj nmap pipenv kubectl jira)
+         zsh-syntax-highlighting docker pj nmap pipenv kubectl aws)
 source $ZSH/oh-my-zsh.sh
 PROJECT_PATHS=(~/Projects ~/Local)
 export POWERLINE_CONFIG_COMMAND="/usr/local/bin/powerline-config"
@@ -42,21 +38,25 @@ ssh-add 2>/dev/null
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
-# source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc'
-
 if which jenv > /dev/null; then eval "$(jenv init -)"; fi
 
 autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /usr/local/bin/vault vault
-export PATH="/usr/local/opt/mysql-client/bin:$PATH"
-#source <(helm completion zsh)
 source <(helm completion zsh | sed 's/aliashash\["\(\w\+\)"\]/aliashash[\1]/g')
-export PATH="/usr/local/opt/redis@4.0/bin:$PATH"
 
 # Add gnu-getopt ti PATH
 export PATH="/usr/local/Cellar/gnu-getopt/1.1.6/bin":$PATH
 
-# Add python3 binaries to PATH
-export PATH="/Users/tenequm/Library/Python/3.7/bin":$PATH
-export PATH="/usr/local/opt/terraform@0.11/bin:$PATH"
+# Ruby development configs
+# https://github.com/monfresh/install-ruby-on-macos
+export PATH="$HOME/.bin:$PATH"
+export PATH="/usr/local/bin:$PATH"
+source /usr/local/share/chruby/chruby.sh
+source /usr/local/share/chruby/auto.sh
+
+alias laptop='bash <(curl -s https://raw.githubusercontent.com/monfresh/laptop/master/laptop)'
+
+eval "$(nodenv init -)"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion

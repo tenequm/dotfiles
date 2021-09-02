@@ -79,7 +79,6 @@ set splitright
 nmap <silent> <leader>j :nohlsearch<CR><Esc> 
 nmap <Leader>ed :tabedit $MYVIMRC<CR>                 
 nmap <Leader>eq :e ~/.vim/UltiSnips/
-nmap <Leader>s <Leader><Leader>s
 nmap <leader>ev :vsp<cr>
 nmap <leader>es :sp<cr>
 " Turning off <Ctrl-p> combination in insert mode
@@ -132,6 +131,7 @@ let g:syntastic_php_php_quiet_messages={"regex": "^unexpected\ \'\%\'$"}
 let g:syntastic_ignore_files = ['\m\.yml$', '\m.\.sh$', '\mfabfile\.py$', '\m\.py$', '\m\.html$']
 
 "/ Easymotion
+nmap <Leader>s <Leader><Leader>s
 hi link EasyMotionTarget ErrorMsg
 hi link EasyMotionShade  Comment
 
@@ -244,7 +244,11 @@ let g:deoplete#enable_at_startup = 1
 
 " Checks if there is a file open after Vim starts up,
 " and if not, open the current working directory in Netrw.
-augroup InitNetrw
-  autocmd!
-  autocmd VimEnter * if expand("%") == "" | edit . | endif
-augroup END"
+" augroup InitNetrw
+"   autocmd!
+"   autocmd VimEnter * if expand("%") == "" | edit . | endif
+" augroup END"
+
+" Disable mouse coursor
+set mouse=c
+let g:netrw_fastbrowse=0

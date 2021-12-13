@@ -1,5 +1,5 @@
 [user]
-	name = Mykhaylo Kolesnik
+	name = Misha Kolesnik
 	email = tenequm@gmail.com
 [core]
   editor = vim
@@ -53,3 +53,5 @@
 	textconv = sops -d
 [pull]
 	rebase = false
+[init]
+	templateDir = /Users/tenequm/.git-template

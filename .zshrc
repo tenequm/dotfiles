@@ -9,6 +9,7 @@ export LANG=en_US.UTF-8
 export SSH_KEY_PATH="~/.ssh/id_ed25519"
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 export TERM=screen-256color
+export XDG_CONFIG_HOME="${HOME}/.config"
 
 export WORKON_HOME=~/.virtualenvs # Virtualenv dependency test
 # source /usr/local/bin/virtualenvwrapper.sh
@@ -18,7 +19,7 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 # Oh-my-zsh configs
 export ZSH=~/.oh-my-zsh
 ZSH_THEME="agnoster"
-plugins=(git colored-man-pages colorize github virtualenv pip python brew osx \
+plugins=(git colored-man-pages colorize github virtualenv pip python brew macos \
          zsh-syntax-highlighting docker pj nmap pipenv kubectl aws)
 source $ZSH/oh-my-zsh.sh
 PROJECT_PATHS=(~/Projects ~/Local)
@@ -32,7 +33,7 @@ source $ALIASFILE
 export KEYTIMEOUT=1
 bindkey '^U' kill-whole-line
 bindkey '^O' vi-cmd-mode
-bindkey '^B' fuck-command-line
+# bindkey '^B' fuck-command-line
 
 ssh-add 2>/dev/null
 
@@ -60,3 +61,25 @@ eval "$(nodenv init -)"
 export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# Kubectl Krew plugins support
+export PATH="${PATH}:${HOME}/.krew/bin"
+
+# Google Cloud SDK
+source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc
+source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc
+
+# Bindings https://stackoverflow.com/a/29403520/16929294
+bindkey "^U" backward-kill-line
+bindkey "^X\\x7f" backward-kill-line
+bindkey "^X^_" redo
+
+# Unset strange aws-cli output behaviour
+unset LESS
+
+# `cheat` util config
+export CHEAT_USE_FZF=true
+
+# pyenv
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"

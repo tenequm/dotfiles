@@ -1,4 +1,7 @@
 #!/bin/bash
+function json_escape () {
+    printf '%s' "$1" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))'
+}
 function add_alias() {
     if [[ -z $1 || -z $2 || $# -gt 2 ]]; then
         echo usage:
@@ -57,6 +60,18 @@ function hupr() {
   helm upgrade --install $1 . --recreate-pods
   fi
 }
+function hval() {
+  helm template . "$@"| kubeval --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master --strict -v 1.21.5  
+}
+function hvala() {
+  for var in ./values-*.yaml
+  do
+    helm template . -f "$var"| kubeval --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master --strict -v 1.21.5  
+  done
+}
+function netstat-rn() {
+  netstat -Watnlv | grep LISTEN | awk '{"ps -ww -o args= -p " $9 | getline procname;colred="\033[01;31m";colclr="\033[0m"; print colred "proto: " colclr $1 colred " | addr.port: " colclr $4 colred " | pid: " colclr $9 colred " | name: " colclr procname;  }' | column -t -s "|"
+}
 alias vggs='vagrant global-status'
 alias vgd='vagrant destroy -f'
 alias vgu='vagrant up'
@@ -78,7 +93,7 @@ alias gp='git push'
 alias gpu='git push -u origin $(git rev-parse --abbrev-ref HEAD)'
 alias gitclean='git gc --prune=now && git remote prune origin'
 alias gbd='git branch -d'
-alias gcd='git checkout dev'
+alias gcd='git checkout develop'
 alias vggs='vagrant global-status'
 alias vgd='vagrant destroy -f'
 alias vgu='vagrant up'
@@ -152,3 +167,9 @@ alias ma='make all'
 alias adefault='export AWS_PROFILE=default'
 alias acreditninja='export AWS_PROFILE=creditninja'
 alias tfl='terraform fmt && tflint'
+alias awsp='aws_profiles'
+alias gglm='git pull origin master'
+alias svenv='source venv/bin/activate'
+alias gprw="gh pr create --web"
+alias tfaa='terraform apply -auto-approve'
+alias awso='aws --profile sso-cn-dev sso login'

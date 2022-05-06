@@ -128,7 +128,7 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 1
 let g:syntastic_auto_jump = 1
 let g:syntastic_php_php_quiet_messages={"regex": "^unexpected\ \'\%\'$"}
-let g:syntastic_ignore_files = ['\m\.yml$', '\m.\.sh$', '\mfabfile\.py$', '\m\.py$', '\m\.html$', '.aliasesrc']
+let g:syntastic_ignore_files = ['\m\.yml$', '\m.\.sh$', '\mfabfile\.py$', '\m\.py$', '\m\.html$', '.aliasesrc', '.env']
 
 "/ Easymotion
 nmap <Leader>s <Leader><Leader>s

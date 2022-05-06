@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-export PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$HOME/bin:/usr/local/sbin:$PATH:$HOME/go/bin"
+export PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$HOME/bin:/usr/local/sbin:$PATH:$HOME/go/bin:/usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/bin"
 export MANPATH="/usr/local/opt/gnu-tar/libexec/gnuman:$MANPATH"
 export EDITOR=vim
 export DEFAULT_USER=tenequm
@@ -83,3 +83,6 @@ export CHEAT_USE_FZF=true
 # pyenv
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
+export GOOGLE_APPLICATION_CREDENTIALS='/Users/tenequm/Projects/forseti-tf/terraform-service-account.json'
+export NVS_HOME="$HOME/.nvs"
+[ -s "$NVS_HOME/nvs.sh" ] && . "$NVS_HOME/nvs.sh"

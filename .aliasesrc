@@ -61,12 +61,12 @@ function hupr() {
   fi
 }
 function hval() {
-  helm template . "$@"| kubeval --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master --strict -v 1.21.5  
+  helm template . "$@"| kubeval --strict -v 1.21.5 --ignore-missing-schemas
 }
 function hvala() {
   for var in ./values-*.yaml
   do
-    helm template . -f "$var"| kubeval --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master --strict -v 1.21.5  
+    helm template . -f "$var"| kubeval --ignore-missing-schemas --strict -v 1.21.5  
   done
 }
 function netstat-rn() {
@@ -173,3 +173,5 @@ alias svenv='source venv/bin/activate'
 alias gprw="gh pr create --web"
 alias tfaa='terraform apply -auto-approve'
 alias awso='aws --profile sso-cn-dev sso login'
+alias tfia='tf init && tf apply'
+alias tfa='tf apply'

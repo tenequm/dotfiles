@@ -212,8 +212,8 @@ endif
 "/ rainbow
 let g:rainbow_active = 1
 
-"/ deoplete
-let g:deoplete#enable_at_startup = 1
+""/ deoplete
+"let g:deoplete#enable_at_startup = 1
 
 "/ Neocomplete configs
 " let g:acp_enableAtStartup = 0

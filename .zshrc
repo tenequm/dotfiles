@@ -20,7 +20,7 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 export ZSH=~/.oh-my-zsh
 ZSH_THEME="agnoster"
 plugins=(git colored-man-pages colorize github virtualenv pip python brew macos \
-         zsh-syntax-highlighting docker pj nmap pipenv kubectl aws)
+         docker pj nmap pipenv kubectl aws)
 source $ZSH/oh-my-zsh.sh
 PROJECT_PATHS=(~/Projects ~/Local)
 export POWERLINE_CONFIG_COMMAND="/usr/local/bin/powerline-config"
@@ -47,27 +47,13 @@ source <(helm completion zsh | sed 's/aliashash\["\(\w\+\)"\]/aliashash[\1]/g')
 # Add gnu-getopt ti PATH
 export PATH="/usr/local/Cellar/gnu-getopt/1.1.6/bin":$PATH
 
-# Ruby development configs
-# https://github.com/monfresh/install-ruby-on-macos
-export PATH="$HOME/.bin:$PATH"
-export PATH="/usr/local/bin:$PATH"
-source /usr/local/share/chruby/chruby.sh
-source /usr/local/share/chruby/auto.sh
-
 alias laptop='bash <(curl -s https://raw.githubusercontent.com/monfresh/laptop/master/laptop)'
 
 eval "$(nodenv init -)"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-# Kubectl Krew plugins support
-export PATH="${PATH}:${HOME}/.krew/bin"
-
 # Google Cloud SDK
-source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc
-source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc
+source /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc
+source /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc
 
 # Bindings https://stackoverflow.com/a/29403520/16929294
 bindkey "^U" backward-kill-line
@@ -86,3 +72,37 @@ eval "$(pyenv virtualenv-init -)"
 export GOOGLE_APPLICATION_CREDENTIALS='/Users/tenequm/Projects/forseti-tf/terraform-service-account.json'
 export NVS_HOME="$HOME/.nvs"
 [ -s "$NVS_HOME/nvs.sh" ] && . "$NVS_HOME/nvs.sh"
+
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# >>> mamba initialize >>>
+# !! Contents within this block are managed by 'mamba init' !!
+export MAMBA_EXE="/Users/tenequm/.micromamba/bin/micromamba";
+export MAMBA_ROOT_PREFIX="/Users/tenequm/micromamba";
+__mamba_setup="$('/Users/tenequm/.micromamba/bin/micromamba' shell hook --shell zsh --prefix '/Users/tenequm/micromamba' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__mamba_setup"
+else
+    if [ -f "/Users/tenequm/micromamba/etc/profile.d/micromamba.sh" ]; then
+        . "/Users/tenequm/micromamba/etc/profile.d/micromamba.sh"
+    else
+        export  PATH="/Users/tenequm/micromamba/bin:$PATH"  # extra space after export prevents interference from conda init
+    fi
+fi
+unset __mamba_setup
+# <<< mamba initialize <<<
+
+# # >>> conda initialize >>>
+# # !! Contents within this block are managed by 'conda init' !!
+# __conda_setup="$('/Users/tenequm/micromamba/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/Users/tenequm/micromamba/etc/profile.d/conda.sh" ]; then
+#         . "/Users/tenequm/micromamba/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/Users/tenequm/micromamba/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
+# # <<< conda initialize <<<

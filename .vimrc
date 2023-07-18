@@ -32,6 +32,8 @@ Plug 'nvie/vim-flake8'
 Plug 'towolf/vim-helm'
 " Plug 'luochen1990/rainbow'
 Plug 'google/vim-jsonnet'
+" Plug 'ConradIrwin/vim-bracketed-paste'
+Plug 'wincent/terminus'
 call plug#end()
 
 "---------Basic configs---------"

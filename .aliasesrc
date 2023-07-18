@@ -1,4 +1,16 @@
 #!/bin/bash
+# https://eunchan.com/oh-my-zsh-show-elapsed-time-from-just-executed-command
+# function preexec() {
+#  timer=$(($(gdate +%s%0N)/1000000))
+# }
+# function precmd() {
+#   if [ $timer  ]; then
+#     now=$(($(gdate +%s%0N)/1000000))
+#     elapsed=$(($now-$timer))
+#     export RPROMPT="%F{cyan}${elapsed}ms %{$reset_color%}"
+#     unset timer
+#   fi
+# }
 function json_escape () {
     printf '%s' "$1" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))'
 }
@@ -61,7 +73,8 @@ function hupr() {
   fi
 }
 function hval() {
-  helm template . "$@"| kubeval --strict -v 1.21.5 --ignore-missing-schemas
+  # helm template . "$@"| kubeval --strict -v 1.21.5 --ignore-missing-schemas
+  helm template -f values.yaml . | kubeconform -kubernetes-version 1.24.5 -output json -summary -strict
 }
 function hvala() {
   for var in ./values-*.yaml
@@ -71,6 +84,9 @@ function hvala() {
 }
 function netstat-rn() {
   netstat -Watnlv | grep LISTEN | awk '{"ps -ww -o args= -p " $9 | getline procname;colred="\033[01;31m";colclr="\033[0m"; print colred "proto: " colclr $1 colred " | addr.port: " colclr $4 colred " | pid: " colclr $9 colred " | name: " colclr procname;  }' | column -t -s "|"
+}
+function lport() {
+  sudo lsof -nP -i4TCP:$@ | grep LISTEN
 }
 alias vggs='vagrant global-status'
 alias vgd='vagrant destroy -f'
@@ -131,7 +147,7 @@ alias duh='du -d 1 -h'
 alias duhs='du -d 1 -h | sort -h'
 alias sduh='sudo du -d 1 -h'
 alias ra='cd ~/Dropbox/Projects/job_stuff/routine_automation'
-alias dco='docker-compose'
+alias dco='docker compose'
 alias esin='curl localhost:9200/_cat/indices'
 alias estemp='curl localhost:9200/_cat/templates'
 alias dps='docker ps'
@@ -177,3 +193,4 @@ alias tfia='tf init && tf apply'
 alias tfa='tf apply'
 alias tf11='docker run --rm -it -v $(pwd):/w -v ~/.aws:/root/.aws -w /w --platform linux/amd64 hashicorp/terraform:0.11.15'
 alias pcli='cargo run --quiet --release --bin pcli'
+alias sprocs='sudo procs'

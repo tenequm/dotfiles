@@ -9,7 +9,6 @@ else
   Plug 'roxma/nvim-yarp'
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
-" Plug 'Shougo/neocomplete'
 Plug 'altercation/vim-colors-solarized'
 Plug 'tpope/vim-surround' | Plug 'tpope/vim-fugitive' | Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar' | Plug 'tpope/vim-commentary'| Plug 'tpope/vim-repeat' 
@@ -30,9 +29,6 @@ Plug 'tpope/vim-eunuch'
 Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 Plug 'nvie/vim-flake8'
 Plug 'towolf/vim-helm'
-" Plug 'luochen1990/rainbow'
-Plug 'google/vim-jsonnet'
-" Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'wincent/terminus'
 call plug#end()
 
@@ -105,7 +101,6 @@ nmap <C-K> <C-W><C-K>
 nmap <C-H> <C-W><C-H>
 nmap <C-L> <C-W><C-L>
 inoremap <C-U> <C-G>u<C-U>
-nmap <leader>kk :!kapitan compile<cr>
 
 "/ Git snips
 set diffopt=filler,vertical
@@ -211,8 +206,8 @@ if has("termguicolors")
     hi! NonText ctermbg=NONE guibg=NONE
 endif
 
-"/ rainbow
-let g:rainbow_active = 1
+" "/ rainbow
+" let g:rainbow_active = 1
 
 ""/ deoplete
 "let g:deoplete#enable_at_startup = 1

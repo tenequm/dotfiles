@@ -1,107 +1,196 @@
-# Fig pre block. Keep at the top of this file.
-[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
 #!/usr/bin/env zsh
 
-export PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$HOME/bin:/usr/local/sbin:$PATH:$HOME/go/bin:/usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/bin:$HOME/.local/bin"
-export PATH="/usr/local/Cellar/gnu-getopt/1.1.6/bin":$PATH
+# =============================================================================
+# Environment Variables
+# =============================================================================
 export EDITOR=vim
-export DEFAULT_USER=tenequm
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
-export SSH_KEY_PATH="~/.ssh/id_ed25519"
-export TERM=screen-256color
 export XDG_CONFIG_HOME="${HOME}/.config"
-
-fpath=(/usr/local/share/zsh-completions $fpath)
-
-# Oh-my-zsh configs
-export ZSH=~/.oh-my-zsh
-ZSH_THEME="agnoster"
-plugins=(git colored-man-pages colorize github virtualenv pip python brew macos \
-  docker pj nmap pipenv kubectl aws command-time kubetail)
-source $ZSH/oh-my-zsh.sh
-PROJECT_PATHS=(~/Projects)
-export POWERLINE_CONFIG_COMMAND="/usr/local/bin/powerline-config"
-
-# Source aliases
-export ALIASFILE=~/.aliasesrc
-source $ALIASFILE
-
-# Bindkeys
 export KEYTIMEOUT=1
-bindkey '^U' kill-whole-line
+export DEFAULT_USER="$(whoami)"
+
+# =============================================================================
+# PATH Setup
+# =============================================================================
+export PATH="/opt/homebrew/bin:$HOME/bin:/usr/local/sbin:$PATH"
+
+# =============================================================================
+# Completion Setup (MUST be before Sheldon)
+# =============================================================================
+# # Initialize completions early
+# autoload -U compinit; compinit
+
+# Fast compinit with daily cache check
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+
+# Additional completion paths
+fpath=(/usr/local/share/zsh-completions $fpath)
+fpath=($HOME/.docker/completions $fpath)
+
+# ZSH Options (before Sheldon)
+# setopt AUTO_CD
+# setopt AUTO_PUSHD
+# setopt PUSHD_IGNORE_DUPS
+
+# =============================================================================
+# Sheldon Plugin Manager
+# =============================================================================
+eval "$(sheldon source)"
+
+# =============================================================================
+# Modern Completion Configuration (AFTER Sheldon)
+# =============================================================================
+# Modern completion settings
+zstyle ':completion:*' menu no
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+# FZF-Tab specific settings (if you install fzf-tab plugin)
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath 2>/dev/null || ls -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview 'git show --color=always $word 2>/dev/null'
+zstyle ':fzf-tab:complete:git-add:*' fzf-preview 'git diff --color=always $word 2>/dev/null'
+zstyle ':fzf-tab:*' switch-group '<' '>'
+
+# Performance optimizations
+zstyle ':completion:*' use-cache yes
+zstyle ':completion:*' cache-path ~/.zsh/cache
+
+# zsh-autosuggestions configuration
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"  # Customize appearance
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)  # Use both history and completion
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20  # Limit buffer size for performance
+ZSH_AUTOSUGGEST_USE_ASYNC=1  # Enable async mode for better performance
+
+# Initialize Starship prompt
+eval "$(starship init zsh)"
+
+# ZSH Options (after Sheldon to avoid conflicts)
+setopt AUTO_CD
+setopt AUTO_PUSHD
+setopt PUSHD_IGNORE_DUPS
+
+# =============================================================================
+# Project Jump Functionality (replaces pj plugin)
+# =============================================================================
+# Project paths
+PROJECT_PATHS=("$HOME/Projects")
+
+# pj function - jump to projects
+pj() {
+    if [[ $# -eq 0 ]]; then
+        # List projects
+        for project_path in $PROJECT_PATHS; do
+            if [[ -d "$project_path" ]]; then
+                find "$project_path" -mindepth 1 -maxdepth 1 -type d -exec basename {} \;
+            fi
+        done
+    else
+        # Jump to project
+        local project_name="$1"
+        for project_path in $PROJECT_PATHS; do
+            local full_path="$project_path/$project_name"
+            if [[ -d "$full_path" ]]; then
+                cd "$full_path"
+                return
+            fi
+        done
+        echo "Project '$project_name' not found"
+    fi
+}
+
+# Tab completion for pj
+_pj() {
+    local projects=()
+    for project_path in $PROJECT_PATHS; do
+        if [[ -d "$project_path" ]]; then
+            projects+=($(find "$project_path" -mindepth 1 -maxdepth 1 -type d -exec basename {} \;))
+        fi
+    done
+    compadd "${projects[@]}"
+}
+compdef _pj pj
+
+# =============================================================================
+# Key Bindings
+# =============================================================================
+# restore the old behavior (emacs keymap
+bindkey -e
+
+bindkey '^U' backward-kill-line
 bindkey '^O' vi-cmd-mode
-# bindkey '^B' fuck-command-line
-
-ssh-add 2>/dev/null
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-
-autoload -U +X bashcompinit && bashcompinit
-autoload -U compinit; compinit
-source <(helm completion zsh | sed 's/aliashash\["\(\w\+\)"\]/aliashash[\1]/g')
-
-eval "$(nodenv init -)"
-
-# Google Cloud SDK
-source /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc
-source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
-export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-
-# Bindings https://stackoverflow.com/a/29403520/16929294
-bindkey "^U" backward-kill-line
 bindkey "^X\\x7f" backward-kill-line
 bindkey "^X^_" redo
 
-# pyenv
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+# Native vim-like navigation
+bindkey '^P' up-line-or-history
+bindkey '^N' down-line-or-history
+# bindkey '^P' up-line-or-search
+# bindkey '^N' down-line-or-search
 
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# =============================================================================
+# Tool Initialization
+# =============================================================================
+# # SSH agent
+# ssh-add 2>/dev/null
 
-# NEAR configs
-export NEAR_ENV=shardnet
-source "$HOME/.cargo/env"
+# Load keys from keychain on shell startup (Apple's ssh-add)
+/usr/bin/ssh-add --apple-load-keychain 2>/dev/null
 
-export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-# place this after nvm initialization!
-autoload -U add-zsh-hook
-load-nvmrc() {
-  local nvmrc_path="$(nvm_find_nvmrc)"
+# FZF
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+# MISE - replaces pyenv, nvm, pnpm, etc.
+eval "$(mise activate zsh)"
 
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
-      nvm use
-    fi
-  elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
-  fi
+# Zoxide (better cd)
+eval "$(zoxide init zsh)"
+
+# Atuin - intelligent shell history
+eval "$(atuin init zsh --disable-up-arrow)"
+
+# =============================================================================
+# Custom Functions
+# =============================================================================
+# Yazi file manager with cd integration
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
 }
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
 
-# Exclude some commands
-# https://github.com/popstas/zsh-command-time
-ZSH_COMMAND_TIME_EXCLUDE=(vim mcedit zshconfig aliases)
-export PATH=/Users/tenequm/Projects/zombienet/dist:$PATH
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-export PATH="/opt/homebrew/opt/binutils/bin:$PATH"
+# =============================================================================
+# Aliases
+# =============================================================================
+# Safe dircolors alias
+command -v gdircolors >/dev/null && alias dircolors='gdircolors'
 
-# stern
-source <(stern --completion=zsh)
+# Source external aliases
+export ALIASFILE="$HOME/.aliasesrc" && source $ALIASFILE
 
-# lld linker setup https://stackoverflow.com/questions/66081944/invalid-linker-name-in-argument-fuse-ld-lld
-export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
-. $(pack completion --shell zsh)
-export HELM_DIFF_THREE_WAY_MERGE=false
+# =============================================================================
+# Final Setup
+# =============================================================================
+# Local environment (if exists)
+[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 
-# Fig post block. Keep at the bottom of this file.
-[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
+
+# pnpm
+export PNPM_HOME="$HOME/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+export COMPOSE_BAKE=true
+
+alias claude="~/.claude/local/claude"

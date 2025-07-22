@@ -1,16 +1,4 @@
 #!/bin/bash
-# https://eunchan.com/oh-my-zsh-show-elapsed-time-from-just-executed-command
-# function preexec() {
-#  timer=$(($(gdate +%s%0N)/1000000))
-# }
-# function precmd() {
-#   if [ $timer  ]; then
-#     now=$(($(gdate +%s%0N)/1000000))
-#     elapsed=$(($now-$timer))
-#     export RPROMPT="%F{cyan}${elapsed}ms %{$reset_color%}"
-#     unset timer
-#   fi
-# }
 function json_escape () {
     printf '%s' "$1" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))'
 }
@@ -40,66 +28,6 @@ function dcx() {
   docker-compose exec $1 bash
   fi
 }
-function git-tag() {
-  if [[ -z $1 || $# -gt 1  ]]; then
-    echo usage:
-    echo "$0 tag number"
-  else
-    git tag -a $1 -m "Version $1" && git push && git push --tags
-  fi
-}
-function git-tag-del() {
-  if [[ -z $1 || $# -gt 1  ]]; then
-    echo usage:
-    echo "$0 tag number"
-  else
-    git tag -d $1 && git push origin :refs/tags/$1
-  fi
-}
-function hup() {
-  if [[ -z $1 || $# -gt 1  ]]; then
-    echo usage:
-    echo "$0 chart_name"
-  else
-  helm upgrade --install $1 .
-  fi
-}
-function hupr() {
-  if [[ -z $1 || $# -gt 1  ]]; then
-    echo usage:
-    echo "$0 chart_name"
-  else
-  helm upgrade --install $1 . --recreate-pods
-  fi
-}
-function hval() {
-  # helm template . "$@"| kubeval --strict -v 1.21.5 --ignore-missing-schemas
-  helm template -f values.yaml . | kubeconform -kubernetes-version 1.24.5 -output json -summary -strict
-}
-function hvala() {
-  for var in ./values-*.yaml
-  do
-    helm template . -f "$var"| kubeval --ignore-missing-schemas --strict -v 1.21.5  
-  done
-}
-function netstat-rn() {
-  netstat -Watnlv | grep LISTEN | awk '{"ps -ww -o args= -p " $9 | getline procname;colred="\033[01;31m";colclr="\033[0m"; print colred "proto: " colclr $1 colred " | addr.port: " colclr $4 colred " | pid: " colclr $9 colred " | name: " colclr procname;  }' | column -t -s "|"
-}
-function lport() {
-  sudo lsof -nP -i4TCP:$@ | grep LISTEN
-}
-alias vggs='vagrant global-status'
-alias vgd='vagrant destroy -f'
-alias vgu='vagrant up'
-alias vgdf='vagrant -f destroy'
-alias vgbl='vagrant box list'
-alias vgb='vagrant box'
-alias vimrc='vim ~/.vimrc'
-alias vgsc='vagrant ssh-config'
-alias check='nc -zv'
-alias vgs='vagrant ssh'
-alias vgp='vagrant provision'
-alias mkpasswd='python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"'
 alias aliases='vim ~/.aliasesrc'
 alias gs='git status'
 alias gcmm='git commit -m '
@@ -110,56 +38,23 @@ alias gpu='git push -u origin $(git rev-parse --abbrev-ref HEAD)'
 alias gitclean='git gc --prune=now && git remote prune origin'
 alias gbd='git branch -d'
 alias gcd='git checkout develop'
-alias vggs='vagrant global-status'
-alias vgd='vagrant destroy -f'
-alias vgu='vagrant up'
-alias vgdf='vagrant -f destroy'
-alias vgbl='vagrant box list'
-alias vgb='vagrant box'
 alias vimrc='vim ~/.vimrc'
-alias vgsc='vagrant ssh-config'
-alias check='nc -zv'
-alias vgs='vagrant ssh'
-alias vgp='vagrant provision'
-alias mkpasswd='python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"'
-alias aliases='vim ~/.aliasesrc'
-alias ap='ansible-playbook'
-alias al='ansible-lint'
-alias dtr='docker run --detach --privileged --workdir=/etc/ansible/roles/role_under_test/tests --name=test1 --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume=`pwd`:/etc/ansible/roles/role_under_test:ro geerlingguy/docker-ubuntu1604-ansible:latest /lib/systemd/systemd'
-alias dt='docker exec -i -t test1 /bin/bash'
-alias dtd='docker rm -f test1'
 alias zshconfig="vim ~/.zshrc"
 alias dud='du -d 1 -h'
 alias duf='du -sh *'
-alias muxr='mux start reg'
-alias vgr='vgd && vgu'
-alias mol='molecule'
-alias spip='sudo -H pip'
-alias mlc='molecule converge'
-alias mld='molecule destroy'
-alias mlr='mlc && mld'
 alias soa='source ~/.aliasesrc'
-alias vag='vagrant'
 alias kgp='kubectl get pods'
 alias kgd='kubectl get deployments'
 alias kgs='kubectl get services'
 alias duh='du -d 1 -h'
 alias duhs='du -d 1 -h | sort -h'
 alias sduh='sudo du -d 1 -h'
-alias ra='cd ~/Dropbox/Projects/job_stuff/routine_automation'
 alias dco='docker compose'
 alias esin='curl localhost:9200/_cat/indices'
 alias estemp='curl localhost:9200/_cat/templates'
 alias dps='docker ps'
 alias soz='source ~/.zshrc'
-alias wod='source /usr/local/bin/virtualenvwrapper.sh && workon django'
-alias woa='source /usr/local/bin/virtualenvwrapper.sh && workon api'
-alias pm='python manage.py'
-alias pmr='python manage.py runserver'
 alias tf='terraform'
-alias vgh='vagrant halt'
-alias vg='vagrant'
-alias vgsus='vagrant suspend'
 alias sshconf='vim ~/.ssh/config'
 alias clean-dns="sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper;sudo dscacheutil -flushcache"
 alias cdns="sudo killall -HUP mDNSResponder"
@@ -172,31 +67,78 @@ alias kubc='kubectl create -f'
 alias kd='kubectl describe'
 alias kgi='kubectl get ingress'
 alias watch='watch -n 0.1'
-alias senv='source venv/bin/activate'
-alias denv='deactivate'
 alias dkr='docker run -it --rm'
 alias htx='helm template . -x'
 alias ht='helm template'
 alias htc='helm template .'
-alias kc='kapitan compile'
 alias ma='make all'
-alias adefault='export AWS_PROFILE=default'
-alias acreditninja='export AWS_PROFILE=creditninja'
 alias tfl='terraform fmt && tflint'
-alias awsp='aws_profiles'
 alias gglm='git pull origin master'
-alias svenv='source venv/bin/activate'
 alias gprw="gh pr create --web"
 alias tfaa='terraform apply -auto-approve'
-alias awso='aws --profile cn-dev sso login'
-alias tfia='tf init && tf apply'
-alias tfa='tf apply'
-alias tf11='docker run --rm -it -v $(pwd):/w -v ~/.aws:/root/.aws -w /w --platform linux/amd64 hashicorp/terraform:0.11.15'
-alias pcli='cargo run --quiet --release --bin pcli'
+alias tfia='terraform init && terraform apply'
+alias tfa='terraform apply'
+alias tfp='terraform plan'
 alias sprocs='sudo procs'
 alias hf=helmfile
-alias lf=lefthook
-alias lfp='lefthook run pre-commit'
+alias hfi='helmfile -i'
+alias hfa='helmfile apply -i'
+alias hfani='helmfile apply'
+alias hfd='helmfile diff'
+alias hfs='helmfile sync'
 alias p8='ping 8.8.8.8'
 alias sk='skaffold'
-alias zn='zombienet-macos'
+
+
+# GCloud aliases - customize these for your environment
+# alias gcap="gcloud config configurations activate YOUR_CONFIG && gcloud auth application-default login"
+# alias gcam="gcloud config configurations activate default && gcloud auth application-default login"
+# alias gcurl='curl --header "Authorization: Bearer $(gcloud auth print-identity-token)"'
+# Git config aliases - add your own signing keys and email
+# alias gconf="git config --local user.signingkey 'YOUR_SSH_KEY' && git config --local user.email YOUR_EMAIL"
+
+# Helmfile aliases - customize for your environment
+# alias hflint='IMAGE_TAG=YOUR_TAG ENVIRONMENT=lint helmfile lint -e YOUR_ENV'
+# alias hflintprod='IMAGE_TAG=YOUR_TAG helmfile lint -e prod'
+alias cs='cursor'
+
+csp() {
+  local projects_dir=~/Projects
+
+  # If an argument is provided, try to open that project directly
+  if [[ -n "$1" ]]; then
+    if [[ -d "$projects_dir/$1" ]]; then
+      cursor "$projects_dir/$1"
+    else
+      echo "Project '$1' not found in $projects_dir"
+      # Optionally fall back to fuzzy search
+      # local selected_dir=$(find "$projects_dir" -mindepth 1 -maxdepth 1 -type d |
+      #   awk -F/ '{print $NF"\t"$0}' |
+      #   fzf --delimiter '\t' --with-nth=1 | cut -f2)
+      # if [[ -n "$selected_dir" ]]; then
+      #   cursor "$selected_dir"
+      # fi
+    fi
+  else
+    # No argument provided, use fuzzy finder
+    local selected_dir=$(find "$projects_dir" -mindepth 1 -maxdepth 1 -type d |
+      awk -F/ '{print $NF"\t"$0}' |
+      fzf --delimiter '\t' --with-nth=1 | cut -f2)
+    if [[ -n "$selected_dir" ]]; then
+      cursor "$selected_dir"
+    fi
+  fi
+}
+
+alias claudeconf="cs '$HOME/Library/Application Support/Claude/claude_desktop_config.json'"
+alias prun='pnpm run'
+alias ll='ls -l'
+alias l='ls -la'
+
+# alias nr="ni run"
+# alias nlx="ni dlx"
+# alias nup="ni upgrade"
+# alias nun="ni uninstall"
+# alias na="ni agent"
+alias npx='nlx'
+

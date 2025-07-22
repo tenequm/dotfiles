@@ -1,0 +1,10 @@
+[tools]
+node = "22"
+rust = "latest"
+go = "latest"
+python = "3.12"
+pnpm = "latest"
+"npm:@antfu/ni" = "latest"
+
+[settings]
+idiomatic_version_file_enable_tools = ["node"]

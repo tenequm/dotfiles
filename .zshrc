@@ -138,10 +138,10 @@ bindkey '^N' down-line-or-history
 # Tool Initialization
 # =============================================================================
 # # SSH agent
-# ssh-add 2>/dev/null
+ssh-add 2>/dev/null
 
 # Load keys from keychain on shell startup (Apple's ssh-add)
-/usr/bin/ssh-add --apple-load-keychain 2>/dev/null
+# /usr/bin/ssh-add --apple-load-keychain 2>/dev/null
 
 # FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -194,3 +194,10 @@ esac
 export COMPOSE_BAKE=true
 
 alias claude="~/.claude/local/claude"
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - zsh)"
+eval "$(uv generate-shell-completion zsh)"
+eval "$(uvx --generate-shell-completion zsh)"
+source ~/.zshenv

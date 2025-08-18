@@ -134,11 +134,4 @@ alias claudeconf="cs '$HOME/Library/Application Support/Claude/claude_desktop_co
 alias prun='pnpm run'
 alias ll='ls -l'
 alias l='ls -la'
-
-# alias nr="ni run"
-# alias nlx="ni dlx"
-# alias nup="ni upgrade"
-# alias nun="ni uninstall"
-# alias na="ni agent"
-alias npx='nlx'
-
+alias md='mkdir -p'

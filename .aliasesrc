@@ -130,8 +130,197 @@ csp() {
   fi
 }
 
-alias claudeconf="cs '$HOME/Library/Application Support/Claude/claude_desktop_config.json'"
+alias claudeconf="code '$HOME/Library/Application Support/Claude/claude_desktop_config.json'"
 alias prun='pnpm run'
 alias ll='ls -l'
 alias l='ls -la'
 alias md='mkdir -p'
+alias gl='git pull'
+alias gp='git push'
+
+gcheck() {
+  if [ -z "$1" ]; then
+    echo "Usage: gcheck <name>"
+    return 1
+  fi
+  
+  local name=$1
+  local variants=("$name" "${name}-labs" "${name}-protocol")
+  
+  # Colors
+  local BOLD='\033[1m'
+  local RED='\033[0;31m'
+  local GREEN='\033[0;32m'
+  local YELLOW='\033[0;33m'
+  local BLUE='\033[0;34m'
+  local CYAN='\033[0;36m'
+  local NC='\033[0m'
+  
+  # Stats tracking
+  local -A gh_available
+  local -A domain_count
+  
+  # Initialize
+  for variant in "${variants[@]}"; do
+    domain_count[$variant]=0
+    gh_available[$variant]=0
+  done
+  
+  echo ""
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "${BOLD}🔍 Checking availability for: ${name}${NC}"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  
+  # GitHub org check
+  echo "${BOLD}GitHub Organizations:${NC}"
+  echo ""
+  
+  for variant in "${variants[@]}"; do
+    local url="https://github.com/${variant}"
+    printf "  ${CYAN}%-50s${NC}" "$url"
+    
+    if gh api "/orgs/$variant" &>/dev/null; then
+      echo "${RED}❌ TAKEN${NC}"
+      gh_available[$variant]=0
+    else
+      if gh api "/users/$variant" &>/dev/null; then
+        echo "${RED}❌ TAKEN (user)${NC}"
+        gh_available[$variant]=0
+      else
+        echo "${GREEN}✅ AVAILABLE${NC}"
+        gh_available[$variant]=1
+      fi
+    fi
+  done
+  
+  echo ""
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "${BOLD}🌐 Domain Availability${NC}"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  
+  # Tier 1 - Critical TLDs
+  echo "${BOLD}${BLUE}Tier 1 - Critical:${NC} ${BOLD}.io, .com, .xyz${NC}"
+  echo ""
+  local tier1=$(tldx "$name" "${name}-labs" "${name}-protocol" \
+    --tlds io,com,xyz \
+    --only-available \
+    --no-color 2>/dev/null)
+  if [ -n "$tier1" ]; then
+    echo "$tier1" | sed 's/^/  /'
+    for variant in "${variants[@]}"; do
+      # Fixed pattern: match " variant." anywhere in line
+      local count=$(echo "$tier1" | grep -c " ${variant}\." 2>/dev/null || echo "0")
+      if [[ ! "$count" =~ ^[0-9]+$ ]]; then
+        count=0
+      fi
+      local current=${domain_count[$variant]:-0}
+      domain_count[$variant]=$((current + count))
+    done
+  else
+    echo "  ${RED}(none available)${NC}"
+  fi
+  echo ""
+  
+  # Tier 2 - Strong options
+  echo "${BOLD}${YELLOW}Tier 2 - Strong:${NC} ${BOLD}.dev, .systems, .tools, .network, .protocol${NC}"
+  echo ""
+  local tier2=$(tldx "$name" "${name}-labs" "${name}-protocol" \
+    --tlds dev,systems,tools,network,protocol \
+    --only-available \
+    --no-color 2>/dev/null)
+  if [ -n "$tier2" ]; then
+    echo "$tier2" | sed 's/^/  /'
+    for variant in "${variants[@]}"; do
+      # Fixed pattern: match " variant." anywhere in line
+      local count=$(echo "$tier2" | grep -c " ${variant}\." 2>/dev/null || echo "0")
+      if [[ ! "$count" =~ ^[0-9]+$ ]]; then
+        count=0
+      fi
+      local current=${domain_count[$variant]:-0}
+      domain_count[$variant]=$((current + count))
+    done
+  else
+    echo "  ${RED}(none available)${NC}"
+  fi
+  echo ""
+  
+  # Tier 3 - Nice to have
+  echo "${BOLD}Tier 3 - Nice to have:${NC} ${BOLD}.gg, .ai, .tech, .app, .co, .org${NC}"
+  echo ""
+  local tier3=$(tldx "$name" "${name}-labs" "${name}-protocol" \
+    --tlds gg,ai,tech,app,co,org \
+    --only-available \
+    --no-color 2>/dev/null)
+  if [ -n "$tier3" ]; then
+    echo "$tier3" | sed 's/^/  /'
+    for variant in "${variants[@]}"; do
+      # Fixed pattern: match " variant." anywhere in line
+      local count=$(echo "$tier3" | grep -c " ${variant}\." 2>/dev/null || echo "0")
+      if [[ ! "$count" =~ ^[0-9]+$ ]]; then
+        count=0
+      fi
+      local current=${domain_count[$variant]:-0}
+      domain_count[$variant]=$((current + count))
+    done
+  else
+    echo "  ${RED}(none available)${NC}"
+  fi
+  echo ""
+  
+  # Summary & Recommendation
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "${BOLD}📊 Summary & Recommendation${NC}"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  
+  local best_variant=""
+  local best_score=0
+  
+  for variant in "${variants[@]}"; do
+    local score=0
+    local gh_status="${RED}✗${NC}"
+    
+    # GitHub available = +10 points
+    local gh_val=${gh_available[$variant]:-0}
+    if [ "$gh_val" = "1" ]; then
+      score=$((score + 10))
+      gh_status="${GREEN}✓${NC}"
+    fi
+    
+    # Each domain = +1 point
+    local domains=${domain_count[$variant]:-0}
+    score=$((score + domains))
+    
+    printf "  ${BOLD}%-30s${NC}  GitHub: %b  Domains: %2d/14  Score: %2d\n" \
+      "$variant" "$gh_status" "$domains" "$score"
+    
+    if [ $score -gt $best_score ]; then
+      best_score=$score
+      best_variant=$variant
+    fi
+  done
+  
+  echo ""
+  
+  if [ -n "$best_variant" ] && [ $best_score -gt 0 ]; then
+    echo "${BOLD}${GREEN}🎯 Recommended: ${best_variant}${NC}"
+    echo "${BOLD}   Score: ${best_score}/24 points${NC}"
+    
+    # Show NPM scope info
+    local gh_val=${gh_available[$best_variant]:-0}
+    if [ "$gh_val" = "1" ]; then
+      echo ""
+      echo "   ${CYAN}📦 NPM scope available: @${best_variant}/*${NC}"
+    fi
+  else
+    echo "${RED}⚠️  No clear winner - all options heavily contested${NC}"
+  fi
+  
+  echo ""
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+}
+alias j='cd'
+alias jj='cdi'

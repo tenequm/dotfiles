@@ -1,6 +1,6 @@
 # Modern CLI Environment Setup
 
-A minimal, powerful command-line setup for macOS with Zsh.
+A minimal, powerful command-line setup for macOS with Zsh, WezTerm, and Neovim.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 Install these tools via Homebrew:
 
 ```bash
-brew install zsh sheldon starship mise fzf zoxide atuin yazi ripgrep eza bat fd dust procs gh git-extras pnpm
+brew install zsh sheldon starship mise fzf zoxide atuin yazi ripgrep eza bat fd dust procs gh pnpm wezterm neovim
 ```
 
 ### Tool Links
@@ -34,9 +34,9 @@ brew install zsh sheldon starship mise fzf zoxide atuin yazi ripgrep eza bat fd 
 - **[dust](https://github.com/bootandy/dust)** - Intuitive du replacement
 - **[procs](https://github.com/dalance/procs)** - Modern ps replacement
 - **[gh](https://github.com/cli/cli)** - GitHub CLI
-- **[git-extras](https://github.com/tj/git-extras)** - Git utilities
 - **[pnpm](https://github.com/pnpm/pnpm)** - Fast package manager
-- **[ni](https://github.com/antfu-collective/ni)** - Use the right package manager
+- **[wezterm](https://wezfurlong.org/wezterm/)** - GPU-accelerated terminal
+- **[neovim](https://neovim.io/)** - Hyperextensible text editor
 
 ## Installation
 
@@ -45,16 +45,18 @@ brew install zsh sheldon starship mise fzf zoxide atuin yazi ripgrep eza bat fd 
 git clone https://github.com/tenequm/dotfiles.git ~/Projects/dotfiles
 
 # Create config directories
-mkdir -p ~/.config/{sheldon,mise}
+mkdir -p ~/.config/{sheldon,mise,nvim}
 
 # Link configuration files
 ln -sf ~/Projects/dotfiles/.zshrc ~/.zshrc
 ln -sf ~/Projects/dotfiles/.aliasesrc ~/.aliasesrc
-ln -sf ~/Projects/dotfiles/sheldon/plugins.toml ~/.config/sheldon/plugins.toml
-ln -sf ~/Projects/dotfiles/starship/starship.toml ~/.config/starship.toml
-ln -sf ~/Projects/dotfiles/mise/config.toml ~/.config/mise/config.toml
+ln -sf ~/Projects/dotfiles/.wezterm.lua ~/.wezterm.lua
+ln -sf ~/Projects/dotfiles/.config/sheldon/plugins.toml ~/.config/sheldon/plugins.toml
+ln -sf ~/Projects/dotfiles/.config/starship.toml ~/.config/starship.toml
+ln -sf ~/Projects/dotfiles/.config/mise/config.toml ~/.config/mise/config.toml
+ln -sf ~/Projects/dotfiles/.config/nvim/init.lua ~/.config/nvim/init.lua
 
-# Create and customize environment variables in a separate untracked ~/.zshenv file
+# Create environment variables file (untracked)
 touch ~/.zshenv
 # Edit ~/.zshenv to add your tokens
 
@@ -67,11 +69,34 @@ $(brew --prefix)/opt/fzf/install --all --no-bash --no-fish
 # Restart your terminal
 ```
 
+## Neovim
+
+The Neovim config uses [lazy.nvim](https://github.com/folke/lazy.nvim) with:
+
+- **LSP** - Go, Python, TypeScript, Rust via Mason
+- **Treesitter** - Syntax highlighting and code navigation
+- **Completion** - nvim-cmp with LSP, snippets, buffer sources
+- **Git** - gitsigns, fugitive, vimagit
+- **Navigation** - smart-splits (seamless nvim/wezterm pane navigation)
+- **Theme** - Solarized dark with transparency
+
+Leader key: `,`
+
+## WezTerm
+
+GPU-accelerated terminal with tmux-like features:
+
+- **Leader key**: `Ctrl+f`
+- **Splits**: `Cmd+\` (horizontal), `Cmd+|` (vertical)
+- **Pane navigation**: `Ctrl+h/j/k/l` (works seamlessly with Neovim)
+- **Copy mode**: `Leader+[`
+- **Search**: `Leader+/`
 
 ## Key Shortcuts
 
-- `z <dir>` - Jump to directory
+- `z <dir>` - Jump to directory (zoxide)
 - `pj <project>` - Jump to ~/Projects
-- `y` - File manager
+- `y` - Yazi file manager
 - `Ctrl+R` - Search history (atuin)
 - `Ctrl+T` - Fuzzy find files (fzf)
+- `gcheck <name>` - Check domain/GitHub availability

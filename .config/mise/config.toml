@@ -1,5 +1,5 @@
 [tools]
-node = "22"
+node = "24.10.0"
 rust = "latest"
 go = "latest"
 python = "3.12"

@@ -15,15 +15,6 @@ shell = "zsh"
 [templates]
 defer = "{{ hooks?.pre | nl }}{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}{{ hooks?.post | nl }}"
 
-# Git aliases and functions
-[plugins.git-extras]
-github = "tj/git-extras"
-
-[plugins.ohmyzsh-git]
-github = "ohmyzsh/ohmyzsh"
-dir = "plugins/git"
-use = ["*.plugin.zsh"]
-
 [plugins]
 
 [plugins.zsh-defer]
@@ -32,13 +23,33 @@ github = "romkatv/zsh-defer"
 [plugins.zsh-completions]
 github = "zsh-users/zsh-completions"
 
+# fzf-tab must load AFTER zsh-completions but BEFORE syntax-highlighting/autosuggestions
+# It initializes compinit internally with proper timing
+[plugins.fzf-tab]
+github = "Aloxaf/fzf-tab"
+hooks.pre = """
+# Initialize completion system (fast compinit with daily cache check)
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+"""
+
+# Git plugins load AFTER fzf-tab so compdef is available
+# [plugins.git-extras]
+# github = "tj/git-extras"
+
+# [plugins.ohmyzsh-git]
+# github = "ohmyzsh/ohmyzsh"
+# dir = "plugins/git"
+# use = ["*.plugin.zsh"]
+
 [plugins.zsh-syntax-highlighting]
-github = "zsh-users/zsh-syntax-highlighting"
+github = "zdharma-continuum/fast-syntax-highlighting"
 apply = ["defer"]
 
 [plugins.zsh-autosuggestions]
 github = "zsh-users/zsh-autosuggestions"
-apply = ["defer"]
-
-[plugins.fzf-tab]
-github = "Aloxaf/fzf-tab"
+use = ["{{ name }}.zsh"]

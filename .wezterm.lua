@@ -1,4 +1,5 @@
 local wezterm = require 'wezterm'
+local act = wezterm.action
 local config = {}
 
 config.term = "wezterm"
@@ -19,8 +20,8 @@ config.colors = {
 }
 
 -- Send proper Alt/Option key sequences instead of using for character composition
-config.send_composed_key_when_left_alt_is_pressed = false
-config.send_composed_key_when_right_alt_is_pressed = false
+-- config.send_composed_key_when_left_alt_is_pressed = false
+-- config.send_composed_key_when_right_alt_is_pressed = false
 
 -- Leader key (like tmux prefix) - Ctrl+f, 1 second timeout
 config.leader = { key = 'f', mods = 'CTRL', timeout_milliseconds = 1000 }
@@ -32,42 +33,83 @@ config.enable_scroll_bar = true
 -- Hyperlink rules: use well-tested defaults
 config.hyperlink_rules = wezterm.default_hyperlink_rules()
 
--- Optional: file paths open in VS Code
+-- Bare domain inside parentheses (like WezTerm's default URL-in-parens pattern)
 table.insert(config.hyperlink_rules, {
-  regex = [[((?:/[a-zA-Z][-\w.]+)+(?::\d+(?::\d+)?)?)(?=\s|$)]],
-  format = 'file://$1',
+  regex = [[\(([\w-]+(?:\.[\w-]+)+\.(?:com|org|net|io|fyi|dev|app|xyz|ai))\)]],
+  format = 'https://$1',
   highlight = 1,
 })
 
--- Mouse bindings: require CMD+Click to open links (like VS Code/IDE behavior)
+-- Bare domain (not wrapped)
+table.insert(config.hyperlink_rules, {
+  regex = [[\b([\w-]+(?:\.[\w-]+)*\.(?:com|org|net|io|fyi|dev|app|xyz|ai))\b]],
+  format = 'https://$1',
+})
+
+-- GitHub user/repo shorthand
+table.insert(config.hyperlink_rules, {
+  regex = [["?([a-zA-Z][\w\-]+)/([a-zA-Z][\w\-\.]+)"?]],
+  format = 'https://github.com/$1/$2',
+})
+
+-- File hyperlinks are handled via OSC-8 (from ls --hyperlink, rg --hyperlink-format, etc.)
+-- See open-uri handler below
+
+config.swallow_mouse_click_on_pane_focus = false
 config.mouse_bindings = {
-  -- Plain click only selects/copies text (no link opening)
+
+  -- Change the default click behavior so that it only selects
+  -- text and doesn't open hyperlinks
   {
     event = { Up = { streak = 1, button = 'Left' } },
     mods = 'NONE',
-    action = wezterm.action.CompleteSelection 'ClipboardAndPrimarySelection',
+    action = act.CompleteSelection 'ClipboardAndPrimarySelection',
   },
-  -- CMD+Click opens hyperlinks
+
+  -- and make CMD-Click open hyperlinks
   {
     event = { Up = { streak = 1, button = 'Left' } },
     mods = 'CMD',
-    action = wezterm.action.OpenLinkAtMouseCursor,
+    action = act.OpenLinkAtMouseCursor,
   },
-  -- Disable CMD+Down to prevent sending click to terminal
+  -- NOTE that binding only the 'Up' event can give unexpected behaviors.
+  -- Disable the 'Down' event of CMD-Click to avoid weird program behaviors
   {
     event = { Down = { streak = 1, button = 'Left' } },
     mods = 'CMD',
-    action = wezterm.action.Nop,
+    action = act.Nop,
   },
 }
+-- -- Mouse bindings: require CMD+Click to open links (like VS Code/IDE behavior)
+-- config.mouse_bindings = {
+--   -- Plain click only selects/copies text (no link opening)
+--   {
+--     event = { Up = { streak = 1, button = 'Left' } },
+--     mods = 'NONE',
+--     action = wezterm.action.CompleteSelection 'ClipboardAndPrimarySelection',
+--   },
+--   -- CMD+Click opens hyperlinks
+--   {
+--     event = { Up = { streak = 1, button = 'Left' } },
+--     mods = 'CMD',
+--     action = wezterm.action.OpenLinkAtMouseCursor,
+--   },
+--   -- Disable CMD+Down to prevent sending click to terminal
+--   {
+--     event = { Down = { streak = 1, button = 'Left' } },
+--     mods = 'CMD',
+--     action = wezterm.action.Nop,
+--   },
+-- }
 
 -- GPU and animation settings
 config.front_end = 'WebGpu'
-config.animation_fps = 60
-config.cursor_blink_rate = 500
+config.max_fps = 120
+config.webgpu_power_preference = 'HighPerformance'  -- Use the 24-core GPU
+-- config.animation_fps = 60
+-- config.cursor_blink_rate = 500
 
 -- Copy mode customization
-local act = wezterm.action
 local copy_mode = wezterm.gui.default_key_tables().copy_mode
 
 -- Override Ctrl+u/d with smaller jumps (~5 lines instead of half page)
@@ -182,30 +224,73 @@ config.keys = {
   -- Quick scroll without entering copy mode
   { key = 'UpArrow', mods = 'SHIFT', action = wezterm.action.ScrollByLine(-1) },
   { key = 'DownArrow', mods = 'SHIFT', action = wezterm.action.ScrollByLine(1) },
+
+  -- Workspaces (Ctrl+f, then w/n/p)
+  { key = 'w', mods = 'LEADER', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
+  { key = 'n', mods = 'LEADER', action = act.SwitchWorkspaceRelative(1) },
+  { key = 'p', mods = 'LEADER', action = act.SwitchWorkspaceRelative(-1) },
 }
 
 -- Smart scrollbar: auto-hide when not needed
-wezterm.on('update-status', function(window, pane)
-  local overrides = window:get_config_overrides() or {}
-  local dimensions = pane:get_dimensions()
-  local should_show = dimensions.scrollback_rows > dimensions.viewport_rows
-    and not pane:is_alt_screen_active()
-  if overrides.enable_scroll_bar ~= should_show then
-    overrides.enable_scroll_bar = should_show
-    window:set_config_overrides(overrides)
-  end
+-- wezterm.on('update-status', function(window, pane)
+--   local overrides = window:get_config_overrides() or {}
+--   local dimensions = pane:get_dimensions()
+--   local should_show = dimensions.scrollback_rows > dimensions.viewport_rows
+--     and not pane:is_alt_screen_active()
+--   if overrides.enable_scroll_bar ~= should_show then
+--     overrides.enable_scroll_bar = should_show
+--     window:set_config_overrides(overrides)
+--   end
+--
+--   -- Mode indicator for copy/search mode, or workspace name
+--   local mode = window:active_key_table()
+--   local workspace = window:active_workspace()
+--
+--   if mode then
+--     window:set_right_status(wezterm.format {
+--       { Foreground = { Color = '#000000' } },
+--       { Background = { Color = '#FFA500' } },
+--       { Text = ' ' .. string.upper(mode):gsub('_', ' ') .. ' ' },
+--     })
+--   elseif workspace ~= 'default' then
+--     window:set_right_status(wezterm.format {
+--       { Foreground = { Color = '#93a1a1' } },
+--       { Text = ' ' .. workspace .. ' ' },
+--     })
+--   else
+--     window:set_right_status('')
+--   end
+-- end)
 
-  -- Mode indicator for copy/search mode
-  local mode = window:active_key_table()
-  if mode then
-    window:set_right_status(wezterm.format {
-      { Foreground = { Color = '#000000' } },
-      { Background = { Color = '#FFA500' } },
-      { Text = ' ' .. string.upper(mode):gsub('_', ' ') .. ' ' },
-    })
-  else
-    window:set_right_status('')
+-- Handle file:// hyperlinks (from ls --hyperlink, rg --hyperlink-format, etc.)
+-- Opens files and directories in VSCode
+wezterm.on('open-uri', function(window, pane, uri)
+  if uri:find('^file:') then
+    local url = wezterm.url.parse(uri)
+    local path = url.file_path
+    local line = url.fragment  -- line number from file://path#42
+
+    -- Check if it's a directory or file
+    local success, stdout, _ = wezterm.run_child_process({ '/usr/bin/file', '--brief', '--mime-type', path })
+
+    if success then
+      if stdout:find('directory') then
+        -- Directory: open VSCode in that folder
+        wezterm.background_child_process({ '/usr/local/bin/code', path })
+        return false
+      else
+        -- File: open in VSCode at line number if available
+        if line then
+          wezterm.background_child_process({ '/usr/local/bin/code', '--goto', path .. ':' .. line })
+        else
+          wezterm.background_child_process({ '/usr/local/bin/code', '--goto', path })
+        end
+        return false
+      end
+    end
   end
+  -- Let WezTerm handle other URIs (http, https, etc.) normally
+  return true
 end)
 
 return config

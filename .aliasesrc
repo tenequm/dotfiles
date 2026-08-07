@@ -41,7 +41,6 @@ alias gcd='git checkout develop'
 alias vimrc='vim ~/.vimrc'
 alias zshconfig="vim ~/.zshrc"
 alias dud='du -d 1 -h'
-alias duf='du -sh *'
 alias soa='source ~/.aliasesrc'
 alias kgp='kubectl get pods'
 alias kgd='kubectl get deployments'
@@ -80,7 +79,7 @@ alias tfia='terraform init && terraform apply'
 alias tfa='terraform apply'
 alias tfp='terraform plan'
 alias sprocs='sudo procs'
-alias hf=helmfile
+# alias hf=helmfile
 alias hfi='helmfile -i'
 alias hfa='helmfile apply -i'
 alias hfani='helmfile apply'
@@ -293,7 +292,7 @@ gcheck() {
     local domains=${domain_count[$variant]:-0}
     score=$((score + domains))
     
-    printf "  ${BOLD}%-30s${NC}  GitHub: %b  Domains: %2d/14  Score: %2d\n" \
+    printf "  ${bold}%-30s${nc}  github: %b  domains: %2d/14  score: %2d\n" \
       "$variant" "$gh_status" "$domains" "$score"
     
     if [ $score -gt $best_score ]; then
@@ -324,3 +323,10 @@ gcheck() {
 }
 alias j='cd'
 alias jj='cdi'
+alias gco='git checkout'
+alias gcm='git checkout main'
+alias gcmm='git commit -m'
+alias ls='ls --color=auto'
+alias delta="delta --hyperlinks --hyperlinks-file-link-format='file://{path}#{line}'"
+alias rg='rg --hyperlink-format=kitty'
+alias lg='lazygit'

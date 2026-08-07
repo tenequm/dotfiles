@@ -1,10 +1,14 @@
 [tools]
-node = "24.10.0"
-rust = "latest"
-go = "latest"
-python = "3.12"
-pnpm = "latest"
+node = "24.18.0"
+go = "1.25"
+python = "3.14"
+just = "1"
 "npm:@antfu/ni" = "latest"
+"github:kunobi-ninja/kache" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
+
+[settings.hook_env]
+chpwd_only = true
+cache_ttl = "5s"

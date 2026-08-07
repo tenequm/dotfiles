@@ -112,6 +112,7 @@ nnoremap <leader>c :cclose<cr>
 
 "/ netrw configs
 nnoremap <c-p> :pclose<cr>
+autocmd FileType netrw nnoremap <buffer> yy :let @* = b:netrw_curdir . '/' . expand('<cfile>')<bar>echo @*<cr>
 let g:netrw_sizestyle="h"
 let g:netrw_preview=1
 let g:netrw_alto=0

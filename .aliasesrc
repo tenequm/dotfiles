@@ -330,3 +330,7 @@ alias ls='ls --color=auto'
 alias delta="delta --hyperlinks --hyperlinks-file-link-format='file://{path}#{line}'"
 alias rg='rg --hyperlink-format=kitty'
 alias lg='lazygit'
+# Patched skills CLI: upstream never compares computedHash, so `update` reinstalls
+# every project skill on every run. Local build carries vercel-labs/skills#1867.
+# Rebuild after pulling: cd ~/pjv/vercel-labs/skills && pnpm build
+alias skills='node ~/pjv/vercel-labs/skills/bin/cli.mjs'

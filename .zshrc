@@ -126,7 +126,7 @@ _pjump() {
     local root depth
     IFS=: read -r root depth <<<"${_PJUMP_ROOTS[$1]}"; shift
     if [[ $# -eq 0 ]]; then
-        [[ -d "$root" ]] && find "$root" -mindepth $depth -maxdepth $depth -type d | sed "s|^$root/||"
+        [[ -d "$root" ]] && find "$root" -mindepth $depth -maxdepth $depth -type d -not -path '*/.*' | sed "s|^$root/||"
     elif [[ -d "$root/$1" ]]; then
         cd "$root/$1"
     else
@@ -140,7 +140,7 @@ pjd() { _pjump pjd "$@" }
 _pjump_complete() {
     local root depth
     IFS=: read -r root depth <<<"${_PJUMP_ROOTS[$service]}"
-    [[ -d "$root" ]] && compadd $(find "$root" -mindepth $depth -maxdepth $depth -type d | sed "s|^$root/||")
+    [[ -d "$root" ]] && compadd $(find "$root" -mindepth $depth -maxdepth $depth -type d -not -path '*/.*' | sed "s|^$root/||")
 }
 compdef _pjump_complete pj pjv pjd
 

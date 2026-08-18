@@ -117,101 +117,32 @@ setopt NO_BEEP
 setopt NO_LIST_BEEP
 
 # =============================================================================
-# Project Jump Functionality (replaces pj plugin)
+# Project Jump Functionality
 # =============================================================================
-# Project paths
-PROJECT_PATHS=("$HOME/Projects")
+# root:depth per command (depth 2 = owner/repo layout)
+typeset -A _PJUMP_ROOTS=(pj "$HOME/Projects:1" pjv "$HOME/pjv:2" pjd "$HOME/pjd:1")
 
-# pj function - jump to projects
-pj() {
+_pjump() {
+    local root depth
+    IFS=: read -r root depth <<<"${_PJUMP_ROOTS[$1]}"; shift
     if [[ $# -eq 0 ]]; then
-        # List projects
-        for project_path in $PROJECT_PATHS; do
-            if [[ -d "$project_path" ]]; then
-                find "$project_path" -mindepth 1 -maxdepth 1 -type d -exec basename {} \;
-            fi
-        done
+        [[ -d "$root" ]] && find "$root" -mindepth $depth -maxdepth $depth -type d | sed "s|^$root/||"
+    elif [[ -d "$root/$1" ]]; then
+        cd "$root/$1"
     else
-        # Jump to project
-        local project_name="$1"
-        for project_path in $PROJECT_PATHS; do
-            local full_path="$project_path/$project_name"
-            if [[ -d "$full_path" ]]; then
-                cd "$full_path"
-                return
-            fi
-        done
-        echo "Project '$project_name' not found"
+        echo "'$1' not found in $root"
     fi
 }
+pj()  { _pjump pj  "$@" }
+pjv() { _pjump pjv "$@" }
+pjd() { _pjump pjd "$@" }
 
-# Tab completion for pj (cached for performance)
-_pj() {
-    # Cache results for 1 hour to avoid running find on every tab press
-    local cache_file="$HOME/.cache/pj_projects_cache"
-    local cache_max_age=3600  # 1 hour in seconds
-
-    # Create cache directory if it doesn't exist
-    mkdir -p "$(dirname "$cache_file")"
-
-    # Regenerate cache if it doesn't exist or is too old
-    if [[ ! -f "$cache_file" ]] || [[ $(( $(date +%s) - $(stat -f %m "$cache_file" 2>/dev/null || echo 0) )) -gt $cache_max_age ]]; then
-        local projects=()
-        for project_path in $PROJECT_PATHS; do
-            if [[ -d "$project_path" ]]; then
-                projects+=($(find "$project_path" -mindepth 1 -maxdepth 1 -type d -exec basename {} \;))
-            fi
-        done
-        printf "%s\n" "${projects[@]}" > "$cache_file"
-    fi
-
-    # Read from cache
-    local cached_projects
-    cached_projects=(${(f)"$(<$cache_file)"})
-    compadd "${cached_projects[@]}"
+_pjump_complete() {
+    local root depth
+    IFS=: read -r root depth <<<"${_PJUMP_ROOTS[$service]}"
+    [[ -d "$root" ]] && compadd $(find "$root" -mindepth $depth -maxdepth $depth -type d | sed "s|^$root/||")
 }
-compdef _pj pj
-
-# pjv function - jump to third-party repos in ~/pjv (owner/repo structure)
-PJV_PATH="$HOME/pjv"
-pjv() {
-    if [[ $# -eq 0 ]]; then
-        # List owner/repo pairs
-        if [[ -d "$PJV_PATH" ]]; then
-            find "$PJV_PATH" -mindepth 2 -maxdepth 2 -type d | sed "s|^$PJV_PATH/||"
-        fi
-    else
-        # Jump to owner/repo
-        local repo_name="$1"
-        local full_path="$PJV_PATH/$repo_name"
-        if [[ -d "$full_path" ]]; then
-            cd "$full_path"
-            return
-        fi
-        echo "Repo '$repo_name' not found in $PJV_PATH"
-    fi
-}
-
-# Tab completion for pjv (cached for performance)
-_pjv() {
-    local cache_file="$HOME/.cache/pjv_projects_cache"
-    local cache_max_age=3600  # 1 hour in seconds
-
-    mkdir -p "$(dirname "$cache_file")"
-
-    if [[ ! -f "$cache_file" ]] || [[ $(( $(date +%s) - $(stat -f %m "$cache_file" 2>/dev/null || echo 0) )) -gt $cache_max_age ]]; then
-        local repos=()
-        if [[ -d "$PJV_PATH" ]]; then
-            repos+=($(find "$PJV_PATH" -mindepth 2 -maxdepth 2 -type d | sed "s|^$PJV_PATH/||"))
-        fi
-        printf "%s\n" "${repos[@]}" > "$cache_file"
-    fi
-
-    local cached_repos
-    cached_repos=(${(f)"$(<$cache_file)"})
-    compadd "${cached_repos[@]}"
-}
-compdef _pjv pjv
+compdef _pjump_complete pj pjv pjd
 
 # =============================================================================
 # Key Bindings

@@ -28,13 +28,14 @@ github = "zsh-users/zsh-completions"
 [plugins.fzf-tab]
 github = "Aloxaf/fzf-tab"
 hooks.pre = """
-# Initialize completion system (fast compinit with daily cache check)
+# Full compinit (with compaudit, ~30ms) at most once a day, compinit -C otherwise.
+# The (#q) qualifier needs EXTENDED_GLOB; without it the pattern is a literal string,
+# the test is always true and every shell pays for the full run.
 autoload -Uz compinit
-if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
-  compinit
-else
-  compinit -C
-fi
+() {
+  setopt localoptions extendedglob
+  if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then compinit; else compinit -C; fi
+}
 """
 
 # Git plugins load AFTER fzf-tab so compdef is available

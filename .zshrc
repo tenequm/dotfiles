@@ -15,7 +15,6 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export XDG_CONFIG_HOME="${HOME}/.config"
 export KEYTIMEOUT=1
-export DEFAULT_USER="$(whoami)"
 export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.7z=01;31:*.ace=01;31:*.alz=01;31:*.apk=01;31:*.arc=01;31:*.arj=01;31:*.bz=01;31:*.bz2=01;31:*.cab=01;31:*.cpio=01;31:*.crate=01;31:*.deb=01;31:*.drpm=01;31:*.dwm=01;31:*.dz=01;31:*.ear=01;31:*.egg=01;31:*.esd=01;31:*.gz=01;31:*.jar=01;31:*.lha=01;31:*.lrz=01;31:*.lz=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.lzo=01;31:*.pyz=01;31:*.rar=01;31:*.rpm=01;31:*.rz=01;31:*.sar=01;31:*.swm=01;31:*.t7z=01;31:*.tar=01;31:*.taz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tgz=01;31:*.tlz=01;31:*.txz=01;31:*.tz=01;31:*.tzo=01;31:*.tzst=01;31:*.udeb=01;31:*.war=01;31:*.whl=01;31:*.wim=01;31:*.xz=01;31:*.z=01;31:*.zip=01;31:*.zoo=01;31:*.zst=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.jxl=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:'
 
 # =============================================================================
@@ -29,12 +28,17 @@ export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/bin:$HOME/.local/bin:/us
 # =============================================================================
 # compinit: The completion system is the #1 startup cost (25-450ms).
 #   - compinit -C skips compaudit (security check) + dump staleness check = ~5ms vs ~35ms
-#   - The "check once per day" pattern in fzf-tab's pre-hook handles this
+#   - The "check once per day" pattern in fzf-tab's pre-hook handles this; its (#q) glob
+#     needs EXTENDED_GLOB or it degrades to "always full compinit" (verify: zprof shows compaudit)
 #   - zcompdump.zwc (byte-compiled) saves ~12ms on sourcing
 #   - Ensure compinit is called exactly ONCE (check with zprof call count)
 #   - After installing new tools: rm ~/.zcompdump* and restart shell
 #
-# mise: Runs `mise hook-env` binary on every prompt via _mise_hook_precmd (~17ms).
+# sheldon / starship init: each is a process spawn (~13ms / ~9ms); their output is cached under
+#   ~/.cache and regenerated only when plugins.toml, plugins.lock or the starship binary changes.
+#
+# mise: `mise activate zsh` (hooks) runs here for interactive shells; ~/.zshenv uses --shims so
+#   scripts and agent shells only pay a PATH prepend. `mise hook-env` runs on cd (~11ms).
 #   - hook_env.chpwd_only=true: only run on cd, not every prompt (biggest win)
 #   - hook_env.cache_ttl="5s": skip filesystem stat checks within TTL
 #   - After editing mise.toml without cd: run `cd .` to force refresh
@@ -68,7 +72,12 @@ fpath=($HOME/.zsh/completions $fpath)  # Cached completions directory
 # =============================================================================
 # Sheldon Plugin Manager
 # =============================================================================
-eval "$(sheldon source)"
+_sheldon_cache="${XDG_CACHE_HOME:-$HOME/.cache}/sheldon/plugins.zsh"
+if [[ ! -s $_sheldon_cache || ~/.config/sheldon/plugins.toml -nt $_sheldon_cache || ~/.local/share/sheldon/plugins.lock -nt $_sheldon_cache ]]; then
+    mkdir -p ${_sheldon_cache:h} && sheldon source > $_sheldon_cache.tmp && mv $_sheldon_cache.tmp $_sheldon_cache && zcompile $_sheldon_cache
+fi
+source $_sheldon_cache
+unset _sheldon_cache
 
 # =============================================================================
 # Modern Completion Configuration (AFTER Sheldon)
@@ -97,6 +106,7 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"  # Old: Very
 ZSH_AUTOSUGGEST_STRATEGY=(history match_prev_cmd)  # FIXED: removed 'completion' to avoid lag on every keystroke
 # ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20  # Limit buffer size for performance
 ZSH_AUTOSUGGEST_USE_ASYNC=1  # Enable async mode for better performance
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1  # Skip widget re-binding on every precmd (run _zsh_autosuggest_bind_widgets after adding widgets)
 
 # Byte-compile zcompdump in background (saves ~12ms on next startup)
 {
@@ -107,7 +117,12 @@ ZSH_AUTOSUGGEST_USE_ASYNC=1  # Enable async mode for better performance
 } &!
 
 # Initialize Starship prompt (must NOT be deferred - needed immediately for prompt)
-eval "$(starship init zsh)"
+_starship_cache="${XDG_CACHE_HOME:-$HOME/.cache}/starship/init.zsh"
+if [[ ! -s $_starship_cache || ${commands[starship]:A} -nt $_starship_cache ]]; then
+    mkdir -p ${_starship_cache:h} && starship init zsh --print-full-init > $_starship_cache.tmp && mv $_starship_cache.tmp $_starship_cache && zcompile $_starship_cache
+fi
+source $_starship_cache
+unset _starship_cache
 
 # ZSH Options (after Sheldon to avoid conflicts)
 setopt AUTO_CD
@@ -164,8 +179,8 @@ bindkey '^N' down-line-or-history
 # =============================================================================
 # Tool Initialization
 # =============================================================================
-# # SSH agent (deferred to avoid blocking startup)
-ssh-add 2>/dev/null
+# SSH agent (deferred; zsh-defer silences its output)
+zsh-defer ssh-add
 
 # Load keys from keychain on shell startup (Apple's ssh-add)
 # /usr/bin/ssh-add --apple-load-keychain 2>/dev/null
@@ -178,10 +193,12 @@ ssh-add 2>/dev/null
 #     bindkey -r '^R'
 # fi
 
-# MISE - activated in ~/.zshenv (runs for both interactive and Claude Code shells)
+# MISE - full activation (cd hooks) for interactive shells; ~/.zshenv only adds the shims dir
+eval "$(mise activate zsh)"
 
-# Atuin - intelligent shell history (deferred; -c so the atuin binary also runs deferred)
-zsh-defer -c 'eval "$(atuin init zsh --disable-up-arrow)"'
+# Atuin - intelligent shell history (deferred; -c so the atuin binary also runs deferred).
+# Last deferred widget definer, so rebind autosuggestions once here (MANUAL_REBIND above).
+zsh-defer -c 'eval "$(atuin init zsh --disable-up-arrow)"; _zsh_autosuggest_bind_widgets'
 
 # =============================================================================
 # Custom Functions
@@ -197,16 +214,10 @@ function y() {
 }
 
 # Regenerate completion cache
-# Run this after updating uv, pyenv, or other tools to refresh completions
+# Run this after updating uv or other tools to refresh completions
 function regen-completions() {
 	echo "Regenerating completion cache..."
 	mkdir -p ~/.zsh/completions
-
-	# Generate pyenv completions
-	if command -v pyenv &> /dev/null; then
-		echo "eval \"\$(pyenv init - zsh)\"" > ~/.zsh/completions/_pyenv
-		echo "  ✓ pyenv completions cached"
-	fi
 
 	# Generate uv completions
 	if command -v uv &> /dev/null; then
@@ -305,17 +316,5 @@ eval "$(zoxide init zsh)"
 # export FORGE_EDITOR="nvim"
 # # <<< forge initialize <<<
 
-# pnpm
-export PNPM_HOME="/Users/tenequm/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME/bin:"*) ;;
-  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
-esac
-# pnpm end
-
 # Added by Antigravity IDE
 export PATH="/Users/tenequm/.antigravity-ide/antigravity-ide/bin:$PATH"
-
-
-# Added by Antigravity CLI installer
-export PATH="/Users/tenequm/.local/bin:$PATH"

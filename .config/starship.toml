@@ -9,6 +9,11 @@ $rust\
 [](fg:#212736 bg:#1d2230)\
 $time"""
 
+# $rust triggers a directory scan; in ~ (~280 entries) stat-ing through the Google Drive, /nix
+# and OrbStack symlinks tripped the 30ms default on cold first prompts.
+scan_timeout = 100
+follow_symlinks = false
+
 [directory]
 style = "fg:#e3e5e5 bg:#769ff0"
 format = "[ $path ]($style)"

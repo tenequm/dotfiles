@@ -20,8 +20,9 @@ export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;
 # =============================================================================
 # PATH Setup
 # =============================================================================
-# Re-prepend Homebrew after Nix (Nix injects itself into /etc/zshrc, which runs before this file)
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/bin:$HOME/.local/bin:/usr/local/sbin:$PATH"
+# Re-prepend Homebrew after Nix (Nix injects itself into /etc/zshrc, which runs before this file).
+# ~/.local/bin stays FIRST so the rg->tgrep router beats Homebrew's rg.
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/bin:/usr/local/sbin:$PATH"
 
 # =============================================================================
 # Shell Performance Reference
@@ -169,6 +170,9 @@ bindkey '^U' backward-kill-line
 bindkey '^O' vi-cmd-mode
 bindkey "^X\\x7f" backward-kill-line
 bindkey "^X^_" redo
+# Ghostty sends CSI-form Alt+arrows (see its config): herdr 0.9.2 strips a bare leading ESC.
+bindkey '^[[1;3D' backward-word
+bindkey '^[[1;3C' forward-word
 
 # Native vim-like navigation
 bindkey '^P' up-line-or-history

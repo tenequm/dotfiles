@@ -21,7 +21,7 @@ export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;
 # PATH Setup
 # =============================================================================
 # Re-prepend Homebrew after Nix (Nix injects itself into /etc/zshrc, which runs before this file).
-# ~/.local/bin stays FIRST so the rg->tgrep router beats Homebrew's rg.
+# ~/.local/bin stays FIRST so the rg shim beats Homebrew's rg.
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/bin:/usr/local/sbin:$PATH"
 
 # =============================================================================

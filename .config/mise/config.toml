@@ -1,13 +1,17 @@
 [tools]
-node = "24.18.0"
-go = "1.25"
+node = "26.10.0"
+go = "1.27"
 python = "3.14"
 just = "1"
 "npm:@antfu/ni" = "latest"
 "github:kunobi-ninja/kache" = "latest"
-"npm:@playwright/cli" = "0.1.18"
-"npm:@earendil-works/pi-coding-agent" = "0.84.4"
+"npm:@playwright/cli" = "0.1.22"
+"npm:@earendil-works/pi-coding-agent" = "1.1.0"
 "npm:clawhub" = "0.23.3"
+tflint = "0.64.0"
+golangci-lint = "2.14.0"
+"npm:acpx" = "0.19.5"
+xcodegen = "2.46.0"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]

@@ -334,3 +334,6 @@ alias lg='lazygit'
 # every project skill on every run. Local build carries vercel-labs/skills#1867.
 # Rebuild after pulling: cd ~/pjv/vercel-labs/skills && pnpm build
 alias skills='node ~/pjv/vercel-labs/skills/bin/cli.mjs'
+
+# AWDL (AirDrop/Sidecar/Universal Control radio) causes Wi-Fi latency spikes while streaming
+alias awdl-toggle='if ifconfig awdl0 | grep -q "status: active"; then sudo ifconfig awdl0 down && echo "AWDL off"; else sudo ifconfig awdl0 up && echo "AWDL on"; fi'
